@@ -8,32 +8,48 @@ let conf = {
           publicPath: 'dist/'
      },
      devServer: {
-     	overlay: true,
-	    contentBase: './dist',
-	    hot: true
+     	overlay: true
+	    // contentBase: './dist'
      },
      module: {
      	rules: [
      	   {
      	   	  test: /\.(js|jsx)$/,
-     	   	  exclude: '/node_modules/'
+     	   	  exclude: '/node_modules/',
 	          loader: "babel-loader",   // определяем загрузчик
 	                options:{
 	                    presets:["@babel/preset-env"]    // используемые плагины
 	                }
            },
-	      {
-	        test: /\.css$/,
-	        use: ExtractTextPlugin.extract({
-	           fallback: "style-loader",
-	           use: "css-loader"
-	        })
-	      }
+           // {
+           //    test: /\.css$/,
+           //    use: ExtractTextPlugin.extract({
+           //       fallback: "style-loader",
+           //       use: "css-loader"
+           //    })
+           // },
+           {
+              test: /\.scss$/,
+              exclude: '/node_modules/',
+              use: [
+                 'style-loader',
+                 'css-loader',
+                 'sass-loader'
+              ]
+           },
+           {
+              test: /\.css$/,
+              exclude: '/node_modules/',
+              use: [
+                  'style-loader',
+                  'css-loader'
+              ]
+           }
      	]
       },
-	  plugins: [
-	    new ExtractTextPlugin("styles.css"),
-	  ]
+  	  plugins: [
+  	    new ExtractTextPlugin("styles.css"),
+  	  ]
 };
 
 module.exports = (env, options) => {
