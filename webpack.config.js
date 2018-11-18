@@ -5,7 +5,7 @@ let conf = {
      output: {
           path: path.resolve(__dirname, './dist'),
           filename: 'main.js',
-          publicPath: 'dist/'
+          publicPath: ''
      },
      devServer: {
      	overlay: true
@@ -29,8 +29,53 @@ let conf = {
            //       use: "css-loader"
            //    })
            // },
+           // {
+           //    test: /\.(gif|png|jpe?g|svg)$/i,
+           //    use: [
+           //      'file-loader',
+           //      {
+           //        loader: 'image-webpack-loader',
+           //        options: {
+           //          mozjpeg: {
+           //            progressive: true,
+           //            quality: 65
+           //          },
+           //          // optipng.enabled: false will disable optipng
+           //          optipng: {
+           //            enabled: true,
+           //          },
+           //          pngquant: {
+           //            quality: '65-90',
+           //            speed: 4
+           //          },
+           //          gifsicle: {
+           //            interlaced: false,
+           //          },
+           //          // the webp option will enable WEBP
+           //          webp: {
+           //            quality: 75
+           //          },
+           //          name: '[path][name].[ext]',
+           //        }
+           //      }
+           //    ]
+           //  },
+            {
+              test: /\.(png|jpg|gif)$/,
+              exclude: '/node_modules/',
+              use: [
+                {
+                  loader: 'file-loader',
+                  options: {
+                    name: 'img/chairs/[name].[ext]',
+                    context: ''
+                  }
+                }
+              ]
+            },
            {
               test: /\.scss$/,
+              exclude: '/node_modules/',
               use: ExtractTextPlugin.extract({
                  fallback: "style-loader",
                  use: ["css-loader","sass-loader"]
