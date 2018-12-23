@@ -8,8 +8,8 @@ let conf = {
           publicPath: ''
      },
      devServer: {
-     	overlay: true
-	    // contentBase: './dist'
+     	overlay: true,
+	    contentBase: './dist'
      },
      module: {
      	rules: [
@@ -67,7 +67,7 @@ let conf = {
                 {
                   loader: 'file-loader',
                   options: {
-                    name: 'img/chairs/[name].[ext]',
+                    name: 'img/[name].[ext]',
                     context: ''
                   }
                 }
