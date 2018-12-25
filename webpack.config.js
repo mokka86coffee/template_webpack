@@ -1,5 +1,6 @@
 let path = require('path');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const autoprefixer = require('autoprefixer');
 let conf = {
      entry: ['babel-polyfill','./src/index.js'],
      output: {
@@ -76,9 +77,34 @@ let conf = {
            {
               test: /\.scss$/,
               exclude: '/node_modules/',
+
               use: ExtractTextPlugin.extract({
                  fallback: "style-loader",
-                 use: ["css-loader","sass-loader"]
+                 use: [
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            sourceMap: true
+                        }
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: [
+                                autoprefixer({
+                                    browsers:['ie >= 8', 'last 4 version']
+                                })
+                            ],
+                            sourceMap: true
+                        }
+                    },
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: true
+                        }
+                    }
+                  ]
               })
            },
            // {
