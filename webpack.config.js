@@ -1,6 +1,8 @@
 let path = require('path');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const autoprefixer = require('autoprefixer');
+const csswring = require("csswring");
+
 let conf = {
      entry: ['babel-polyfill','./src/index.js'],
      output: {
@@ -92,8 +94,9 @@ let conf = {
                         options: {
                             plugins: [
                                 autoprefixer({
-                                    browsers:['ie >= 8', 'last 4 version']
-                                })
+                                    browsers:['cover 99.5%']
+                                }),
+                                csswring({removeAllComments: true,preserveHacks: true})
                             ],
                             sourceMap: true
                         }
