@@ -12,7 +12,7 @@ let conf = {
      },
      devServer: {
      	overlay: true,
-	    contentBase: './dist'
+        contentBase: path.join(__dirname, 'dist')
      },
      module: {
      	rules: [
@@ -22,7 +22,7 @@ let conf = {
 	          loader: "babel-loader",   // определяем загрузчик
 	                options:{
 	                    presets:["@babel/preset-env","@babel/preset-react",{
-                          'plugins': ['@babel/plugin-proposal-class-properties']}]    // используемые плагины
+                            'plugins': ['@babel/plugin-proposal-class-properties']}]    // используемые плагины
 	                }
            },
            // {
@@ -70,12 +70,24 @@ let conf = {
                 {
                   loader: 'file-loader',
                   options: {
-                    name: 'img/[name].[ext]',
-                    context: ''
+                    name: '[name].[ext]',
+                    context: '',
+                      outputPath: 'img/'
                   }
                 }
               ]
-            },
+             },
+             {
+                 test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+                 exclude: '/node_modules/',
+                 use: [{
+                     loader: 'file-loader',
+                     options: {
+                         name: '[name].[ext]',
+                         outputPath: 'fonts/'
+                     }
+                 }]
+             },
            {
               test: /\.scss$/,
               exclude: '/node_modules/',
@@ -119,14 +131,14 @@ let conf = {
            //       'sass-loader'
            //    ]
            // },
-           {
+            {
               test: /\.css$/,
               exclude: '/node_modules/',
               use: [
                   'style-loader',
                   'css-loader'
               ]
-           }
+            }
      	]
       },
   	  plugins: [
