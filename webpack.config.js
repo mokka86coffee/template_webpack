@@ -72,7 +72,7 @@ let conf = {
                   options: {
                     name: '[name].[ext]',
                     context: '',
-                      outputPath: 'img/'
+                      outputPath: 'imgs/'
                   }
                 }
               ]
@@ -99,7 +99,11 @@ let conf = {
                         loader: 'css-loader',
                         options: {
                             sourceMap: true
-                        }
+                        },
+		    	query: {
+			    modules: true,
+			    localIdentName: '[name]__[local]__[hash:base64:5]'
+			}
                     },
                     {
                         loader: 'postcss-loader',
