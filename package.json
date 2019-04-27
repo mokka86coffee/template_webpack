@@ -4,11 +4,20 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "npm": "^6.5.0"
+    "mobx": "^5.9.4",
+    "mobx-react": "^5.4.3",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-redux": "^6.0.0",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "redux": "^4.0.1",
+    "redux-devtools-extension": "^2.13.7"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "autoprefixer": "^9.4.3",
@@ -22,35 +31,39 @@
     "file-loader": "^2.0.0",
     "image-webpack-loader": "^4.5.0",
     "jquery": "^3.3.1",
+    "mobx-react-devtools": "^6.1.1",
     "node-sass": "^4.9.3",
     "path": "^0.12.7",
     "postcss": "^7.0.7",
     "postcss-loader": "^3.0.0",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
-    "react-redux": "^6.0.0",
-    "react-router": "^4.3.1",
-    "react-router-dom": "^4.3.1",
-    "redux": "^4.0.1",
-    "redux-devtools-extension": "^2.13.7",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.0",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.9"
   },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ],
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ]
+    ]
+  },
   "scripts": {
     "start": "webpack-dev-server --mode development --open",
     "build": "webpack --mode production"
-  },
-  "author": "",
-  "description": "",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mokka86coffee/template_webpack.git"
-  },
-  "bugs": {
-    "url": "https://github.com/mokka86coffee/template_webpack/issues"
-  },
-  "homepage": "https://github.com/mokka86coffee/template_webpack#readme"
+  }
 }

@@ -19,19 +19,8 @@ let conf = {
      	   {
      	   	  test: /\.(js|jsx)$/,
      	   	  exclude: '/node_modules/',
-	          loader: "babel-loader",   // определяем загрузчик
-	                options:{
-	                    presets:["@babel/preset-env","@babel/preset-react",{
-                            'plugins': ['@babel/plugin-proposal-class-properties']}]    // используемые плагины
-	                }
+	          loader: "babel-loader"
            },
-           // {
-           //    test: /\.css$/,
-           //    use: ExtractTextPlugin.extract({
-           //       fallback: "style-loader",
-           //       use: "css-loader"
-           //    })
-           // },
            // {
            //    test: /\.(gif|png|jpe?g|svg)$/i,
            //    use: [
@@ -72,7 +61,7 @@ let conf = {
                   options: {
                     name: '[name].[ext]',
                     context: '',
-                      outputPath: 'imgs/'
+                    outputPath: 'imgs/'
                   }
                 }
               ]
@@ -97,13 +86,10 @@ let conf = {
                  use: [
                     {
                         loader: 'css-loader',
-                        options: {
-                            sourceMap: true
-                        },
-		    	query: {
-			    modules: true,
-			    localIdentName: '[name]__[local]__[hash:base64:5]'
-			}
+                        query: {
+                            modules: true,
+                            localIdentName: '[name]__[local]__[hash:base64:5]'
+                        }
                     },
                     {
                         loader: 'postcss-loader',
