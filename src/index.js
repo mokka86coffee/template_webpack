@@ -2,7 +2,7 @@ import './index.scss'
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import DevTools from 'mobx-react-devtools';
-import { observable } from 'mobx';
+import { observable, decorate } from 'mobx';
 import { observer } from 'mobx-react';
 
 const counterState = observable({
@@ -36,4 +36,4 @@ counterState.decrement = function() {
     }
 }
 
-ReactDOM.render(<Counter store={counterState} />, document.getElementById('root'));
+ReactDOM.render(<Counter store={ counterState } />, document.getElementById('root'));
