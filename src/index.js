@@ -17,12 +17,15 @@ class counterState {
   async increment () {
     this.count++
     let result = await axios('https://jsonplaceholder.typicode.com/todos')
-    console.log(result.data)
-    this.fromFetch = result.data
+    this.handleFetch(result.data)
   }
 
   decrement() {
     this.count--
+  }
+
+  handleFetch (data) {
+    this.fromFetch = data
   }
 
   get getCounter(){
@@ -33,20 +36,20 @@ class counterState {
 
 const store = decorate(counterState,{
   count: observable,
+  fromFetch: observable,
   increment: action,
   decrement: action,
+  handleFetch: action,
   getCounter: computed
 })
 
 const appStore = new store()
 
 autorun(reaction => {
-  console.log(appStore.count)
-  console.log('in autorun')
-  
+  console.log('in autorun', appStore.fromFetch)
 },{
   name: 'autorun first one',
-  delay: 3000
+  delay: 1000
 })
 
 when(
