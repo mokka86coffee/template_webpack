@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
 
+import styles from './App.scss'
+
 class App extends Component{
 
     componentDidMount(){
@@ -18,7 +20,7 @@ class App extends Component{
             { 
                 getUserInfo.map( user => (
                     <div key={ user.id }>
-                        <p>Name: { user.name }</p>
+                        <p className={styles.active}>Name: { user.name }</p>
                         <p>Email: { user.email }</p>
                         <hr />
                     </div>
