@@ -28,7 +28,6 @@ class App extends Component{
                 getBirds.map( bird => (
                     <div key={ bird }>
                         <p>Bird: { bird }</p>
-                        <hr />
                     </div>
                 ) )
             }
