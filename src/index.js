@@ -13,7 +13,7 @@ configure({ enforceActions: 'observed' })
 
 class counterState {
   count = 0
-  fromFetch = []
+  fromFetch = []  
 
   increment () {
     this.count++
@@ -25,7 +25,6 @@ class counterState {
 
   fetchGenerator = flow(function*(){
     let result = yield axios('https://jsonplaceholder.typicode.com/todos')
-    console.log(result)
     this.fromFetch = result.data
   })
 
@@ -94,7 +93,7 @@ ReactDOM.render(<Counter store={ appStore } />, document.getElementById('root'))
 
 
 function * gen(arg) {
-  yield Promise.resolve(1))
+  yield Promise.resolve(1)
   yield 2;
   yield 3;
 }
