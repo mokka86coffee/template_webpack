@@ -8,11 +8,8 @@ import { observable, decorate, configure, action, computed, autorun, runInAction
 import { observer, Provider } from 'mobx-react';
 
 import UsersStore from './stores/UsersStore'
+import BirdsStore from './stores/BirdStore'
 
 configure({ enforceActions: 'observed' })
 
-
-const appUsersStore = new UsersStore()
-
-
-ReactDOM.render(<Provider { ...{appUsersStore} }><App/></Provider>, document.getElementById('root'));
+ReactDOM.render(<Provider { ...{ UsersStore, BirdsStore } }><App/></Provider>, document.getElementById('root'));

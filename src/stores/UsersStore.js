@@ -1,7 +1,7 @@
 import { decorate, observable, computed, flow, action } from 'mobx'
 import axios from 'axios'
 
-export default decorate(class {
+const store = decorate(class {
     users = []
 
     get getUserInfo(){
@@ -18,3 +18,4 @@ export default decorate(class {
     fetchUsers: action
 });
 
+export default new store()

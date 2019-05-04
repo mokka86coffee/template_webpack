@@ -1,18 +1,16 @@
 import React, { Component } from 'react'
 import { observer, inject } from 'mobx-react'
 
-import axios from 'axios'
-
-@inject('appUsersStore')
-@observer
-export default class extends Component{
+class App extends Component{
 
     componentDidMount(){
-        this.props.appUsersStore.fetchUsers()
+        this.props.UsersStore.fetchUsers()
     }
 
     render(){
-        const { getUserInfo } = this.props.appUsersStore
+        const { getUserInfo } = this.props.UsersStore
+        const { getBirds } = this.props.BirdsStore
+
         if ( !getUserInfo.length ) return <div>nothing to display</div>
 
         return (
@@ -26,7 +24,19 @@ export default class extends Component{
                     </div>
                 ) )
             }
+            { 
+                getBirds.map( bird => (
+                    <div key={ bird }>
+                        <p>Bird: { bird }</p>
+                        <hr />
+                    </div>
+                ) )
+            }
             </div>
         )
     }
 }
+
+// @inject('appUsersStore')
+// @observer
+export default inject('UsersStore', 'BirdsStore')(observer(App))
