@@ -5,8 +5,9 @@ import ReactDOM from 'react-dom';
 import axios from 'axios'
 
 import DevTools from 'mobx-react-devtools';
-import { observable, decorate, configure, action, computed, autorun, runInAction, when  } from 'mobx';
+import { observable, decorate, configure, action, computed, autorun, runInAction, when, flow  } from 'mobx';
 import { observer } from 'mobx-react';
+import { Promise } from 'q';
 
 configure({ enforceActions: 'observed' })
 
@@ -14,19 +15,19 @@ class counterState {
   count = 0
   fromFetch = []
 
-  async increment () {
+  increment () {
     this.count++
-    let result = await axios('https://jsonplaceholder.typicode.com/todos')
-    this.handleFetch(result.data)
   }
 
   decrement() {
     this.count--
   }
 
-  handleFetch (data) {
-    this.fromFetch = data
-  }
+  fetchGenerator = flow(function*(){
+    let result = yield axios('https://jsonplaceholder.typicode.com/todos')
+    console.log(result)
+    this.fromFetch = result.data
+  })
 
   get getCounter(){
     return this.count
@@ -46,10 +47,11 @@ const store = decorate(counterState,{
 const appStore = new store()
 
 autorun(reaction => {
-  console.log('in autorun', appStore.fromFetch)
+  appStore.fetchGenerator()
+  // console.log('in autorun', appStore.fromFetch)
 },{
   name: 'autorun first one',
-  delay: 1000
+  delay: 3000
 })
 
 when(
@@ -88,3 +90,15 @@ class Counter extends Component {
 }
 
 ReactDOM.render(<Counter store={ appStore } />, document.getElementById('root'));
+
+
+
+function * gen(arg) {
+  yield Promise.resolve(1))
+  yield 2;
+  yield 3;
+}
+
+let Gen = gen()
+console.log(Gen.next())
+console.log(Gen.next())
