@@ -56,4 +56,4 @@ function add(a){
     return func;
 }
 
-console.log(add(2))
+console.log( 1 + add(2)(3) )
