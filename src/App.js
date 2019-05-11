@@ -1,4 +1,10 @@
-import React, { Component, useState, useCallback, useReducer } from "react";
+import React, {
+  Component,
+  useState,
+  useCallback,
+  useReducer,
+  useEffect
+} from "react";
 import axios from "axios";
 import styles from "./App.scss";
 
@@ -40,6 +46,16 @@ function App() {
   const [count, setCount] = useReducer(c => c + 1, 0);
   const [todos, setTodos] = useState([]);
   // const inc = useCallback(() => setCount(count => count + 1), 0);
+
+  useEffect(async () => {
+    const fetched = await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    );
+    setTodos(fetched.data);
+  });
+  // function setCount() {
+  //   useSetCount(count + 1);
+  // }
 
   if (!todos.length) {
     axios
