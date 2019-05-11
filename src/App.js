@@ -1,16 +1,26 @@
-import React, { Component } from "react";
-
+import React, { Component, useState } from "react";
+import axios from "axios";
 import styles from "./App.scss";
 
 class App extends Component {
-  state = { count: 0 };
+  state = { count: 0, todos: [] };
+
+  async componentDidMount() {
+    const fetched = await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    );
+    this.setState({ todos: fetched.data });
+
+    // console.table(fetched.data);
+  }
 
   setCount = () => {
     const { count } = this.state;
-    this.setState({ count: count + 1 });
+    this.setState(() => ({ count: count + 1 }));
   };
 
   render() {
+    console.log("----------------");
     const {
       state: { count },
       setCount
@@ -19,6 +29,7 @@ class App extends Component {
       <>
         <Header {...{ count }} />
         <Main {...{ setCount }} />
+        <Hook />
         <Footer />
       </>
     );
@@ -60,4 +71,16 @@ class Footer extends React.PureComponent {
       </footer>
     );
   }
+}
+
+function Hook(props) {
+  const [count, setCount] = useState(0);
+  console.log("Hook rendered");
+
+  return (
+    <aside>
+      <span>{count}</span>
+      <button onClick={() => setCount(count + 1)}>+1</button>
+    </aside>
+  );
 }
