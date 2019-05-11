@@ -1,4 +1,4 @@
-import { decorate, observable, computed, flow, action } from 'mobx'
+import { decorate, observable, computed, flow, action, runInAction } from 'mobx'
 import axios from 'axios'
 
 const store = decorate(class {
@@ -8,10 +8,10 @@ const store = decorate(class {
         return this.users;
     }
 
-    fetchUsers = flow(function* (arg){
-        const fetched = yield axios('https://jsonplaceholder.typicode.com/users') ;
+    fetchUsers = flow(function* (){
+        const fetched = yield axios('https://jsonplaceholder.typicode.com/users');
         this.users = fetched.data;
-    })
+    });
 },{
     users: observable,
     getUserInfo: computed,
@@ -19,7 +19,19 @@ const store = decorate(class {
 });
 
 class decStore {
-    
+    @observable users = [];
+
+    @computed get getUserInfo(){
+        return this.users;
+    }
+
+    @action
+    fetchUsers = async () => {
+        const fetched = await axios('https://jsonplaceholder.typicode.com/users');
+        runInAction( () => 
+           this.users = fetched.data
+        );
+    }
 }
 
 export default new decStore();
