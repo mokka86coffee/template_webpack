@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useCallback, useReducer } from "react";
 import axios from "axios";
 import styles from "./App.scss";
 
@@ -37,8 +37,9 @@ class _App extends Component {
 }
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useReducer(c => c + 1, 0);
   const [todos, setTodos] = useState([]);
+  // const inc = useCallback(() => setCount(count => count + 1), 0);
 
   if (!todos.length) {
     axios
@@ -46,12 +47,14 @@ function App() {
       .then(({ data }) => setTodos(data));
   }
 
+  console.clear();
+
   return (
     <>
       <Header {...{ count }} />
-      <Main setCount={() => setCount(count + 1)} />
+      <Main {...{ setCount }} />
       <Hook />
-      <Footer {...{ todos }} />
+      <Footer {...{ todos, setCount }} />
     </>
   );
 }
@@ -64,7 +67,7 @@ var Header = React.memo(({ count }) => {
     <header>
       <h1>Header</h1>
       <p>
-        Нажато
+        Нажато{" "}
         {/(^|[^1])[2-4]$/.test(count + "") ? `${count} раза` : `${count} раз`}
       </p>
     </header>
@@ -81,7 +84,7 @@ var Main = React.memo(({ setCount }) => {
   );
 });
 
-var Footer = React.memo(({ todos }) => {
+var Footer = React.memo(({ todos, setCount }) => {
   console.log("Footer rendered");
   return (
     <footer>
@@ -90,7 +93,7 @@ var Footer = React.memo(({ todos }) => {
         <tbody>
           {todos.map(todo => (
             <tr key={todo.id}>
-              <td>{todo.title}</td>
+              <td onClick={setCount}>{todo.title}</td>
             </tr>
           ))}
         </tbody>
@@ -99,7 +102,7 @@ var Footer = React.memo(({ todos }) => {
   );
 });
 
-function Hook(props) {
+var Hook = React.memo(function(props) {
   const [obj, fn] = useState({ count: 0, another: 0 });
   console.log("Hook rendered");
 
@@ -114,4 +117,4 @@ function Hook(props) {
       </button>
     </aside>
   );
-}
+});
