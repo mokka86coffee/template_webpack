@@ -2,15 +2,15 @@ import { decorate, observable, computed, flow, action } from 'mobx'
 import axios from 'axios'
 
 const store = decorate(class {
-    users = []
+    users = [];
 
     get getUserInfo(){
-        return this.users
+        return this.users;
     }
 
     fetchUsers = flow(function* (arg){
-        const fetched = yield axios('https://jsonplaceholder.typicode.com/users') 
-        this.users = fetched.data 
+        const fetched = yield axios('https://jsonplaceholder.typicode.com/users') ;
+        this.users = fetched.data;
     })
 },{
     users: observable,
@@ -18,4 +18,9 @@ const store = decorate(class {
     fetchUsers: action
 });
 
-export default new store()
+class decStore {
+    
+}
+
+export default new decStore();
+// export default new store();
