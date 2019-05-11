@@ -6,7 +6,7 @@ import styles from './App.scss'
 class App extends Component{
 
     componentDidMount(){
-        this.props.UsersStore.fetchUsers()
+        this.props.UsersStore.fetchUsers();
     }
 
     render(){
