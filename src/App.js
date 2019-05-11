@@ -2,7 +2,7 @@ import React, { Component, useState } from "react";
 import axios from "axios";
 import styles from "./App.scss";
 
-class App extends Component {
+class _App extends Component {
   state = { count: 0, todos: [] };
 
   async componentDidMount() {
@@ -11,7 +11,7 @@ class App extends Component {
     );
     this.setState({ todos: fetched.data });
 
-    // console.table(fetched.data);
+    console.log(fetched.data);
   }
 
   setCount = () => {
@@ -22,7 +22,7 @@ class App extends Component {
   render() {
     console.log("----------------");
     const {
-      state: { count },
+      state: { count, todos },
       setCount
     } = this;
     return (
@@ -30,10 +30,30 @@ class App extends Component {
         <Header {...{ count }} />
         <Main {...{ setCount }} />
         <Hook />
-        <Footer />
+        <Footer {...{ todos }} />
       </>
     );
   }
+}
+
+function App() {
+  const [count, setCount] = useState(0);
+  const [todos, setTodos] = useState([]);
+
+  if (!todos.length) {
+    axios
+      .get("https://jsonplaceholder.typicode.com/todos")
+      .then(({ data }) => setTodos(data));
+  }
+
+  return (
+    <>
+      <Header {...{ count }} />
+      <Main setCount={() => setCount(count + 1)} />
+      <Hook />
+      <Footer {...{ todos }} />
+    </>
+  );
 }
 
 export default App;
@@ -43,7 +63,10 @@ var Header = React.memo(({ count }) => {
   return (
     <header>
       <h1>Header</h1>
-      <p> Нажато {count} раз</p>
+      <p>
+        Нажато
+        {/(^|[^1])[2-4]$/.test(count + "") ? `${count} раза` : `${count} раз`}
+      </p>
     </header>
   );
 });
@@ -58,23 +81,37 @@ var Main = React.memo(({ setCount }) => {
   );
 });
 
-var Footer = React.memo(() => {
+var Footer = React.memo(({ todos }) => {
   console.log("Footer rendered");
   return (
     <footer>
       <h3>Footer</h3>
+      <table>
+        <tbody>
+          {todos.map(todo => (
+            <tr key={todo.id}>
+              <td>{todo.title}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </footer>
   );
 });
 
 function Hook(props) {
-  const [count, setCount] = useState(0);
+  const [obj, fn] = useState({ count: 0, another: 0 });
   console.log("Hook rendered");
 
   return (
     <aside>
-      <span>{count}</span>
-      <button onClick={() => setCount(count + 1)}>+1</button>
+      <span>{obj.count}</span>
+      <span>{obj.another}</span>
+      <button
+        onClick={() => fn({ count: obj.count + 1, another: obj.another - 1 })}
+      >
+        +1
+      </button>
     </aside>
   );
 }
