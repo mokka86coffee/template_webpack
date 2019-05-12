@@ -1,129 +1,77 @@
-import React, {
-  Component,
-  useState,
-  useCallback,
-  useReducer,
-  useEffect
-} from "react";
-import axios from "axios";
+import React from "react";
+
 import styles from "./App.scss";
 
-class _App extends Component {
-  state = { count: 0, todos: [] };
-  //should it be
-  async componentDidMount() {
-    const fetched = await axios.get(
-      "https://jsonplaceholder.typicode.com/todos"
-    );
-    this.setState({ todos: fetched.data });
-
-    console.log(fetched.data);
-  }
-
-  setCount = () => {
-    const { count } = this.state;
-    this.setState(() => ({ count: count + 1 }));
+export default class App extends React.Component {
+  state = {
+    attempts: 0,
+    title: "Main",
+    hiddenWord: (Math.random() * 100000).toFixed(),
+    word: null
   };
 
+  componentDidMount() {
+    const { hiddenWord } = this.state;
+    const word = Array(hiddenWord.length)
+      .fill("-")
+      .join("");
+    this.setState({ word });
+  }
+
+  handleBtnPress = ({ target: { innerText: val } }) => {
+    let { word, hiddenWord, title } = this.state;
+    if (hiddenWord.includes(val)) {
+      word = word
+        .split("")
+        .reduce(
+          (r, _, i) =>
+            hiddenWord[i] === val ? r.concat(val) : r.concat(word[i]),
+          ""
+        );
+    }
+    title = word.includes("-") ? title : "You're the winner!";
+    this.setState({ word, title });
+  };
   render() {
-    console.log("----------------");
     const {
-      state: { count, todos },
-      setCount
+      state: { word, hiddenWord, title },
+      handleBtnPress
     } = this;
+    console.log(hiddenWord);
     return (
-      <>
-        <h1>Header</h1>
-        <Header {...{ count }} />
-        <Main {...{ setCount }} />
-        <Hook />
-        <Footer {...{ todos }} />
-      </>
+      <div className={styles.grid}>
+        <header>
+          <span>header</span>
+        </header>
+        <aside>
+          <span>aside</span>
+        </aside>
+        <main>
+          <span>{title}</span>
+          <div className="puzzle">
+            <div className="puzzle__word">{word}</div>
+            <div className="puzzle__buttons">
+              <Btns {...{ handleBtnPress }} />
+            </div>
+          </div>
+        </main>
+        <footer>
+          <span>footer</span>
+        </footer>
+      </div>
     );
   }
 }
 
-function App() {
-  const [count, setCount] = useReducer(c => c + 1, 0);
-  const [todos, setTodos] = useState([]);
-  // const inc = useCallback(() => setCount(count => count + 1), 0);
-
-  useEffect(async () => {
-    console.log("useEffect");
-    const fetched = await axios.get(
-      "https://jsonplaceholder.typicode.com/todos"
-    );
-    setTodos(fetched.data);
-  }, 1);
-
-  // console.clear();
-
-  return (
-    <>
-      <Header {...{ count }} />
-      <Main {...{ setCount }} />
-      <Hook />
-      <Footer {...{ todos, setCount }} />
-    </>
-  );
-}
-
-export default App;
-
-var Header = React.memo(({ count }) => {
-  console.log("Header rendered");
-  return (
-    <header>
-      <h1>Header</h1>
-      <p>
-        Нажато{" "}
-        {/(^|[^1])[2-4]$/.test(count + "") ? `${count} раза` : `${count} раз`}
-      </p>
-    </header>
-  );
-});
-
-var Main = React.memo(({ setCount }) => {
-  console.log("Main rendered");
-  return (
-    <main>
-      <h2>Main</h2>
-      <button onClick={setCount}>+1</button>
-    </main>
-  );
-});
-
-var Footer = React.memo(({ todos, setCount }) => {
-  console.log("Footer rendered");
-  return (
-    <footer>
-      <h3>Footer</h3>
-      <table>
-        <tbody>
-          {todos.map(todo => (
-            <tr key={todo.id}>
-              <td onClick={setCount}>{todo.title}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </footer>
-  );
-});
-
-var Hook = React.memo(function(props) {
-  const [obj, fn] = useState({ count: 0, another: 0 });
-  console.log("Hook rendered");
-
-  return (
-    <aside>
-      <span>{obj.count}</span>
-      <span>{obj.another}</span>
-      <button
-        onClick={() => fn({ count: obj.count + 1, another: obj.another - 1 })}
-      >
-        +1
+var Btns = React.memo(({ handleBtnPress }) => {
+  console.log("Btns rendered");
+  const Btns = Array(10)
+    .fill(0)
+    .map((_, i) => (
+      <button onClick={handleBtnPress} className={styles.btn} key={i}>
+        {i}
       </button>
-    </aside>
-  );
+    ));
+
+  return Btns;
 });
