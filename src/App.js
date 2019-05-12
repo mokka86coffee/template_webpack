@@ -10,7 +10,7 @@ import styles from "./App.scss";
 
 class _App extends Component {
   state = { count: 0, todos: [] };
-
+  //should it be
   async componentDidMount() {
     const fetched = await axios.get(
       "https://jsonplaceholder.typicode.com/todos"
@@ -33,6 +33,7 @@ class _App extends Component {
     } = this;
     return (
       <>
+        <h1>Header</h1>
         <Header {...{ count }} />
         <Main {...{ setCount }} />
         <Hook />
@@ -48,20 +49,12 @@ function App() {
   // const inc = useCallback(() => setCount(count => count + 1), 0);
 
   useEffect(async () => {
+    console.log("useEffect");
     const fetched = await axios.get(
       "https://jsonplaceholder.typicode.com/todos"
     );
     setTodos(fetched.data);
-  });
-  // function setCount() {
-  //   useSetCount(count + 1);
-  // }
-
-  if (!todos.length) {
-    axios
-      .get("https://jsonplaceholder.typicode.com/todos")
-      .then(({ data }) => setTodos(data));
-  }
+  }, 1);
 
   console.clear();
 
