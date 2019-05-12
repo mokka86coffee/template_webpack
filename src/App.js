@@ -56,7 +56,7 @@ function App() {
     setTodos(fetched.data);
   }, 1);
 
-  console.clear();
+  // console.clear();
 
   return (
     <>
