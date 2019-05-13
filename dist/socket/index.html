@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
+    />
+    <style>
+      body {
+        margin: 0;
+      }
+      .socket {
+        display: grid;
+        grid-template-rows: 20px 1fr;
+        grid-gap: 10px;
+        padding: 10px;
+      }
+      .socket__input {
+        padding: 10px;
+      }
+      .socket__chat {
+        display: grid;
+        grid-auto-rows: 20px;
+        grid-gap: 10px;
+        padding: 10px;
+        justify-content: center;
+        background-color: #000;
+      }
+      .socket__msg {
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="socket">
+      <input class="socket__input" type="text" />
+      <div class="socket__chat"></div>
+    </div>
+    <script>
+      const msgContainer = document.querySelector(".socket__chat");
+      const msgInput = document.querySelector(".socket__input");
+      msgInput.addEventListener("keypress", handleMsgSend);
+
+      function handleMsgSend({ keyCode, target: { value } }) {
+        if (keyCode === 13) {
+          socket.send(value);
+          msgInput.value = "";
+          msgContainer.innerHTML =
+            msgContainer.innerHTML + `<div class="socket__msg">${value}</div>`;
+        }
+      }
+
+      var socket = new WebSocket("ws://localhost:2006");
+      socket.onopen = handleSocketResponse;
+      socket.onclose = handleSocketResponse;
+      socket.onmessage = handleSocketResponse;
+
+      function handleSocketResponse({ type, data }) {
+        const msg = data ? data : type;
+        msgContainer.innerHTML =
+          msgContainer.innerHTML + `<div class="socket__msg">${msg}</div>`;
+      }
+    </script>
+  </body>
+</html>

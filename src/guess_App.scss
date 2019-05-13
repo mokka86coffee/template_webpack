@@ -49,4 +49,18 @@ footer {
   padding: 5px 10px;
   background-color: skyblue;
   color: #000;
+
+  &D {
+    background-color: grey;
+  }
+}
+
+.socket {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+
+  &__chat {
+    color: #fff;
+    background-color: #000;
+  }
 }
