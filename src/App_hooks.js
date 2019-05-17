@@ -10,7 +10,6 @@ import styles from "./App.scss";
 
 class _App extends Component {
   state = { count: 0, todos: [] };
-  //should it be
   async componentDidMount() {
     const fetched = await axios.get(
       "https://jsonplaceholder.typicode.com/todos"
