@@ -2,14 +2,23 @@ import './index.scss'
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App.jsx';
+import {Provider} from 'react-redux';
+import { createStore } from 'redux';
 
-import DevTools from 'mobx-react-devtools';
-import { observable, decorate, configure, action, computed, autorun, runInAction, when, flow  } from 'mobx';
-import { observer, Provider } from 'mobx-react';
+const reducer = (store, action) => {
+    console.log('in reducer---------------');
+    console.log('store - ', store);
+    console.log('in reducer---------------');
+    switch(action.type) {
+        case 'INC_X': return { ...store, x: store.x + action.payload };
+        case 'INC_Y': return { ...store, y: store.y + action.payload };
+        case 'INC_Z': return { ...store, z: store.z + action.payload };
+        default: return store;
+    }
+};
 
-import UsersStore from './stores/UsersStore'
-import BirdsStore from './stores/BirdStore'
+const initialState = { x: 0, y: 0, z: 0, };
+const store = createStore(reducer, initialState);
 
-configure({ enforceActions: 'observed' })
+ReactDOM.render(<Provider store={store}><App/></Provider>, document.getElementById('root'));
 
-ReactDOM.render(<Provider { ...{ UsersStore, BirdsStore } }><App/></Provider>, document.getElementById('root'));
