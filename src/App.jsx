@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
-
+import uuid from 'uuid/v4';
+const data = createSelector(({z}) => z, setRandomArr);
 class App extends Component{
 
     render(){
         console.log(this.props);
+        const elements = data(this.props);
         const { x, y, z, incX, incY, incZ } = this.props;
         return (
             <>
@@ -18,12 +20,7 @@ class App extends Component{
                     <button onClick={incY}>incY</button>
                     <button onClick={incZ}>incZ</button>
                 </div>
-                {
-                    (() => {
-                        console.log('Rerender');
-                        return <p>Rerender</p>;
-                    })()
-                }
+                <div>{elements}</div>
             </>
         );
     }
@@ -46,3 +43,9 @@ const mapDispachToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispachToProps)(App);
+
+function setRandomArr(){
+    console.log('started setRandomArr');
+    const resultedArr = Array(100).fill(0).map(el=>Math.random().toFixed(2));
+    return resultedArr.map(el=><p key={uuid()}>{el}</p>);
+}
