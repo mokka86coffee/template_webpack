@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import createStoreEnhance from './utils/createStoreEnhance';
 import App from './App.jsx';
 import './index.scss';
 
@@ -22,6 +23,8 @@ const reducer = (store: Object, action: Object) => {
 
 const initialState = { x: 0, y: 0, z: 0, };
 const store = createStore(reducer, initialState, applyMiddleware(thunk));
+
+const storeEn = createStoreEnhance(reducer,initialState);
 
 const { Provider: SomeProvider, Consumer: SomeConsumer } = React.createContext<any>();
 
