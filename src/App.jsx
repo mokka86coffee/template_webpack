@@ -4,12 +4,13 @@ import type {Node} from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import uuid from 'uuid/v4';
+import _ from 'lodash';
 const data = createSelector(({z}) => z, setRandomArr);
 
 class App extends Component<{[key:string]: any}>{
 
     render(){
-        console.log(this.props);
+        console.log('props - ', this.props);
         const { x, y, z, incX, incY, incZ, elements } = this.props;
         return (
             <>
@@ -35,17 +36,22 @@ const mapStateToProps = (store, hz) => {
     };
 };
 
-const incX = () => ({ type: 'INC_X', payload: +Math.random().toFixed(2) });
+const incX = ({x}) => {
+    return { type: 'INC_X', payload: +Math.random().toFixed(2) };
+};
+
 const incY = () => ({ type: 'INC_Y', payload: +Math.random().toFixed(2) });
 const incZ = () => ({ type: 'INC_Z', payload: +Math.random().toFixed(2) });
 
 const actions = { incX, incY, incZ };
 
-const mapDispachToProps = (dispatch: function) => ({
-    incX: () => dispatch(incX()),
-    incY: () => dispatch(incY()),
-    incZ: () => dispatch(incZ()),
-});
+const mapDispachToProps = (dispatch: function, store) => {
+    return ({
+        incX: () => dispatch(incX(store)),
+        incY: () => dispatch(incY()),
+        incZ: () => dispatch(incZ()),
+    });
+}
 
 export default connect(mapStateToProps, mapDispachToProps)(App);
 
