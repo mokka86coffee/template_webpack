@@ -5,12 +5,15 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import uuid from 'uuid/v4';
 import _ from 'lodash';
+import {withSomeConsumer} from './';
+import compose from './utils/compose';
+
 const data = createSelector(({z}) => z, setRandomArr);
 
 class App extends Component<{[key:string]: any}>{
 
     componentDidMount() {
-        this.props.fetchData('users');
+        // this.props.fetchData('users');
     }
 
     render(){
@@ -61,7 +64,12 @@ const mapDispachToProps = (dispatch: function, store) => {
     });
 }
 
-export default connect(mapStateToProps, mapDispachToProps)(App);
+export default compose(
+    withSomeConsumer(), 
+    connect(mapStateToProps, mapDispachToProps)
+)(App);
+
+// export default withSomeConsumer()(connect(mapStateToProps, mapDispachToProps)(App));
 
 function setRandomArr(): Array<Node>{
     console.log('started setRandomArr');

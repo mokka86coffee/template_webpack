@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import type {Node, ComponentType} from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
@@ -21,6 +22,21 @@ const reducer = (store: Object, action: Object) => {
 
 const initialState = { x: 0, y: 0, z: 0, };
 const store = createStore(reducer, initialState, applyMiddleware(thunk));
+
+const { Provider: SomeProvider, Consumer: SomeConsumer } = React.createContext<any>();
+
+export function withSomeConsumer() {
+    return (Component: ComponentType<empty>) => (props: any) => (
+        <SomeConsumer>
+        {
+            (prop) => (
+                <Component {...props} SomeConsumerContext={prop} />
+            )
+        }
+        </SomeConsumer>
+    );
+}
+
 // $FlowIgnore
-ReactDOM.render(<Provider store={store}><App/></Provider>, document.querySelector('#root'));
+ReactDOM.render(<Provider store={store}><SomeProvider value={[()=>{},()=>{},()=>{}]}><App/></SomeProvider></Provider>, document.querySelector('#root'));
 
