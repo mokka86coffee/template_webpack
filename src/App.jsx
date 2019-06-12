@@ -9,6 +9,10 @@ const data = createSelector(({z}) => z, setRandomArr);
 
 class App extends Component<{[key:string]: any}>{
 
+    componentDidMount() {
+        this.props.fetchData('users');
+    }
+
     render(){
         console.log('props - ', this.props);
         const { x, y, z, incX, incY, incZ, elements } = this.props;
@@ -21,6 +25,7 @@ class App extends Component<{[key:string]: any}>{
                 <div>
                     <button onClick={incX}>incX</button>
                     <button onClick={incY}>incY</button>
+                    <button onClick={incZ}>incZ</button>
                     <button onClick={incZ}>incZ</button>
                 </div>
                 <div style={{display: 'flex', flexWrap: 'wrap'}}>{elements}</div>
@@ -43,6 +48,8 @@ const incX = ({x}) => {
 const incY = () => ({ type: 'INC_Y', payload: +Math.random().toFixed(2) });
 const incZ = () => ({ type: 'INC_Z', payload: +Math.random().toFixed(2) });
 
+const fetchData = (str: string) => ({ type: 'FETCH_SMTH', payload: str });
+
 const actions = { incX, incY, incZ };
 
 const mapDispachToProps = (dispatch: function, store) => {
@@ -50,6 +57,7 @@ const mapDispachToProps = (dispatch: function, store) => {
         incX: () => dispatch(incX(store)),
         incY: () => dispatch(incY()),
         incZ: () => dispatch(incZ()),
+        fetchData: (str) => dispatch(fetchData(str))
     });
 }
 
@@ -58,6 +66,6 @@ export default connect(mapStateToProps, mapDispachToProps)(App);
 function setRandomArr(): Array<Node>{
     console.log('started setRandomArr');
     const resultedArr = Array(1000).fill(0).map(el=>Math.random().toFixed(2));
-    return resultedArr.map(el=><span style ={{margin: '10px'}} key={uuid()}>{el}</span>);
+    return resultedArr.map(el=><span onClick={() => console.log(el)} style ={{margin: '10px'}} key={uuid()}>{el}</span>);
 }
 
