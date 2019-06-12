@@ -6,7 +6,7 @@ import { createStore } from 'redux';
 import App from './App.jsx';
 import './index.scss';
 
-const reducer = (store, action) => {
+const reducer = (store: Object, action: Object) => {
     console.log('in reducer---------------');
     console.log('store - ', store);
     console.log('in reducer---------------');
@@ -14,7 +14,7 @@ const reducer = (store, action) => {
         case 'INC_X': return { ...store, x: store.x + action.payload };
         case 'INC_Y': return { ...store, y: store.y + action.payload };
         case 'INC_Z': return { ...store, z: store.z + action.payload };
-        default: return store;
+        default: (action: empty); return store;
     }
 };
 

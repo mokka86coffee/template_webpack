@@ -15,10 +15,7 @@ module.name_mapper='^src\/\(.*\)$' -> '<PROJECT_ROOT>/src/\1'
 
 [ignore]
 <PROJECT_ROOT>/node_modules/[^@]
-;<PROJECT_ROOT>/node_modules/@storybook
 ;<PROJECT_ROOT>/node_modules/@babel
-;<PROJECT_ROOT>/node_modules/@vtb/fetch
-;<PROJECT_ROOT>/node_modules/@vtb/bem-helper
 ;<PROJECT_ROOT>/node_modules/.*
 
 .*stats.json$
