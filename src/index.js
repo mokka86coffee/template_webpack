@@ -1,10 +1,10 @@
 // @flow
-import './index.scss';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import App from './App.jsx';
 import {Provider} from 'react-redux';
 import { createStore } from 'redux';
+import App from './App.jsx';
+import './index.scss';
 
 const reducer = (store, action) => {
     console.log('in reducer---------------');

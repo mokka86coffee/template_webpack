@@ -11,10 +11,7 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowIgnore
 suppress_comment=\\(.\\|\n\\)*\\$NeedFixTypes
 suppress_comment=\\(.\\|\n\\)*\\$FlowRelaxItIsATest
 
-module.name_mapper='@vtb/services/i18n' -> '<PROJECT_ROOT>/node_modules/@vtb/services/src/i18n'
-module.name_mapper='@vtb/services/request' -> '<PROJECT_ROOT>/node_modules/@vtb/services/src/request'
-module.name_mapper='@vtb/services/redux-actions' -> '<PROJECT_ROOT>/node_modules/@vtb/services/src/redux-actions'
-;
+module.name_mapper='^src\/\(.*\)$' -> '<PROJECT_ROOT>/src/\1'
 
 [ignore]
 <PROJECT_ROOT>/node_modules/[^@]
