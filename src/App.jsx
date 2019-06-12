@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -7,8 +8,7 @@ class App extends Component{
 
     render(){
         console.log(this.props);
-        const elements = data(this.props);
-        const { x, y, z, incX, incY, incZ } = this.props;
+        const { x, y, z, incX, incY, incZ, elements } = this.props;
         return (
             <>
                 <p>Redux</p>
@@ -20,14 +20,17 @@ class App extends Component{
                     <button onClick={incY}>incY</button>
                     <button onClick={incZ}>incZ</button>
                 </div>
-                <div>{elements}</div>
+                <div style={{display: 'flex', flexWrap: 'wrap'}}>{elements}</div>
             </>
         );
     }
 }
 
 const mapStateToProps = (store, hz) => {
-    return store;
+    return {
+        elements: data(store),        
+        ...store
+    };
 };
 
 const incX = () => ({ type: 'INC_X', payload: +Math.random().toFixed(2) });
@@ -46,6 +49,12 @@ export default connect(mapStateToProps, mapDispachToProps)(App);
 
 function setRandomArr(){
     console.log('started setRandomArr');
-    const resultedArr = Array(100).fill(0).map(el=>Math.random().toFixed(2));
-    return resultedArr.map(el=><p key={uuid()}>{el}</p>);
+    const resultedArr = Array(1000).fill(0).map(el=>Math.random().toFixed(2));
+    return resultedArr.map(el=><span style ={{margin: '10px'}} key={uuid()}>{el}</span>);
 }
+
+class AA<O> {
+    data: O = 'aa';
+}
+
+const str:AA = 'ss';
