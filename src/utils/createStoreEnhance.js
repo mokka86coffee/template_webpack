@@ -1,16 +1,8 @@
 // @flow
 import { createStore } from 'redux';
 
-export default (reducer: () => {}, state: {}) => {
-    const store = createStore(reducer, state);
-    const originalDispath = store.dispatch;
-    store.dispatch = (action: {} | string) => {
-        if (typeof action === 'string') {
-            return originalDispath({ type: action });
-        }
-
-        return originalDispath(action);
-    }
-
-    return store;
+export default (store: {}) => (dispatch: () => {}) => (action: {}) => {
+    fetch('https://jsonplaceholder.typicode.com/todos/1')
+    .then(response => response.json())
+    .then(json => dispatch({type: ''}))
 }

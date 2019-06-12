@@ -44,10 +44,7 @@ const mapStateToProps = (store, hz) => {
     };
 };
 
-const incX = ({x}) => {
-    return { type: 'INC_X', payload: +Math.random().toFixed(2) };
-};
-
+const incX = () => ({ type: 'INC_X', payload: +Math.random().toFixed(2) });
 const incY = () => ({ type: 'INC_Y', payload: +Math.random().toFixed(2) });
 const incZ = () => ({ type: 'INC_Z', payload: +Math.random().toFixed(2) });
 
@@ -55,12 +52,12 @@ const fetchData = (str: string) => ({ type: 'FETCH_SMTH', payload: str });
 
 const actions = { incX, incY, incZ };
 
-const mapDispachToProps = (dispatch: function, store) => {
+const mapDispachToProps = (dispatch) => {
     return ({
-        incX: () => dispatch(incX(store)),
+        incX: () => dispatch(incX()),
         incY: () => dispatch(incY()),
         incZ: () => dispatch(incZ()),
-        fetchData: (str) => dispatch(fetchData(str))
+        fetchData: (str: 'users' | 'todos') => dispatch(fetchData(str))
     });
 }
 

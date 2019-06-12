@@ -5,14 +5,10 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import createStoreEnhance from './utils/createStoreEnhance';
 import App from './App.jsx';
 import './index.scss';
 
 const reducer = (store: Object, action: Object) => {
-    console.log('in reducer---------------');
-    console.log('store - ', store);
-    console.log('in reducer---------------');
     switch(action.type) {
         case 'INC_X': return { ...store, x: store.x + action.payload };
         case 'INC_Y': return { ...store, y: store.y + action.payload };
@@ -21,10 +17,21 @@ const reducer = (store: Object, action: Object) => {
     }
 };
 
-const initialState = { x: 0, y: 0, z: 0, };
-const store = createStore(reducer, initialState, applyMiddleware(thunk));
+const logEnhancer = store => dispatch => action => {
+    console.table({
+        action: action.type || action,
+        store: store.getState()
+    });
+    return dispatch(action);
+}
 
-const storeEn = createStoreEnhance(reducer,initialState);
+const stringEnhancer = store => dispatch => action => {
+    if ( typeof action === 'string') { return dispatch({ type: action })}
+    return dispatch(action);
+}
+
+const initialState = { x: 0, y: 0, z: 0, };
+const store = createStore(reducer, initialState, applyMiddleware(thunk, stringEnhancer, logEnhancer));
 
 const { Provider: SomeProvider, Consumer: SomeConsumer } = React.createContext<any>();
 
