@@ -1,10 +1,12 @@
 // @flow
 import React, { Component } from 'react';
+import type {Node} from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import uuid from 'uuid/v4';
 const data = createSelector(({z}) => z, setRandomArr);
-class App extends Component{
+
+class App extends Component<{[key:string]: any}>{
 
     render(){
         console.log(this.props);
@@ -39,7 +41,7 @@ const incZ = () => ({ type: 'INC_Z', payload: +Math.random().toFixed(2) });
 
 const actions = { incX, incY, incZ };
 
-const mapDispachToProps = (dispatch) => ({
+const mapDispachToProps = (dispatch: function) => ({
     incX: () => dispatch(incX()),
     incY: () => dispatch(incY()),
     incZ: () => dispatch(incZ()),
@@ -47,14 +49,9 @@ const mapDispachToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispachToProps)(App);
 
-function setRandomArr(){
+function setRandomArr(): Array<Node>{
     console.log('started setRandomArr');
     const resultedArr = Array(1000).fill(0).map(el=>Math.random().toFixed(2));
     return resultedArr.map(el=><span style ={{margin: '10px'}} key={uuid()}>{el}</span>);
 }
 
-class AA<O> {
-    data: O = 'aa';
-}
-
-const str:AA = 'ss';

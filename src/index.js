@@ -20,6 +20,6 @@ const reducer = (store, action) => {
 
 const initialState = { x: 0, y: 0, z: 0, };
 const store = createStore(reducer, initialState);
-
-ReactDOM.render(<Provider store={store}><App/></Provider>, document.getElementById('root'));
+// $FlowIgnore
+ReactDOM.render(<Provider store={store}><App/></Provider>, document.querySelector('#root'));
 
