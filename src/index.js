@@ -5,14 +5,17 @@ import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 import App from './App.jsx';
 import './index.scss';
 
 const reducer = (store: Object, action: Object) => {
+    console.log('in reducer', action)
     switch(action.type) {
         case 'INC_X': return { ...store, x: store.x + action.payload };
         case 'INC_Y': return { ...store, y: store.y + action.payload };
         case 'INC_Z': return { ...store, z: store.z + action.payload };
+        case 'logEnhancer': return { ...store, zz: Math.random() };
         case 'FETCH_DONE': return { ...store, data: action.payload };
         default: (action: empty); return store;
     }
@@ -20,10 +23,10 @@ const reducer = (store: Object, action: Object) => {
 
 const logEnhancer = store => dispatch => action => {
     console.table({
-        action: action.type || action,
-        store: store.getState()
+        // action: action.type || action,
+        // store: store.getState()
     });
-    return dispatch(action);
+    return dispatch({type: 'logEnhancer'});
 }
 
 const stringEnhancer = store => dispatch => action => {
@@ -48,6 +51,14 @@ export function withSomeConsumer() {
     );
 }
 
+ReactDOM.render(
+    <Provider store={store}>
+        <Router>
+            <SomeProvider value={[()=>{},()=>{},()=>{}]}>
+                <Route path='/' component={App}/>
+            </SomeProvider>
+        </Router>
+    </Provider>, 
 // $FlowIgnore
-ReactDOM.render(<Provider store={store}><SomeProvider value={[()=>{},()=>{},()=>{}]}><App/></SomeProvider></Provider>, document.querySelector('#root'));
-
+    document.querySelector('#root')
+);

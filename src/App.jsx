@@ -7,6 +7,8 @@ import uuid from 'uuid/v4';
 import _ from 'lodash';
 import {withSomeConsumer} from './';
 import compose from './utils/compose';
+import {compose as reduxCompose} from 'redux';
+import {withRouter, Link, Switch, Route} from 'react-router-dom';
 
 const data = createSelector(({z}) => z, setRandomArr);
 const fetched = createSelector(({data}) => data, (data) => {
@@ -14,6 +16,37 @@ const fetched = createSelector(({data}) => data, (data) => {
     console.log('in createSelector fetched', result);
     return result;
 });
+
+type ReactProps = {
+
+};
+
+class NotRender extends Component<ReactProps, {}> {
+
+    state = {
+        some: 'soe'
+    }
+
+    shouldComponentUpdate(...args) {
+        console.log('args - ', args);
+        return false;
+    }
+
+    render() {
+        console.log('in NotRender');
+        return (
+            <p>in NotRender</p>
+        )
+    }
+}
+
+const NoRender = compose(
+    withRouter,
+    connect(
+        ({ x }) => ({ x }),
+        dispatch => ({})
+    )
+)(NotRender);
 
 class App extends Component<{[key:string]: any}>{
 
@@ -27,15 +60,20 @@ class App extends Component<{[key:string]: any}>{
         return (
             <>
                 <p>Redux</p>
+                <WithRoutes />
                 <p>CountX: {x}</p>
                 <p>CountY: {y}</p>
                 <p>CountZ: {z}</p>
+                <Link to="/as">as</Link>
+                <Link to="/as2">as2</Link>
+                <Link to="/as3">as3</Link>
                 <div>
                     <button onClick={incX}>incX</button>
                     <button onClick={incY}>incY</button>
                     <button onClick={incZ}>incZ</button>
                     <button onClick={incZ}>incZ</button>
                 </div>
+                <NoRender />
                 <div style={{display: 'flex', flexWrap: 'wrap'}}>{ss}</div>
                 <div style={{display: 'flex', flexWrap: 'wrap'}}>{elements}</div>
             </>
@@ -43,13 +81,6 @@ class App extends Component<{[key:string]: any}>{
     }
 }
 
-const mapStateToProps = (store, hz) => {
-    return {
-        ...store,
-        elements: data(store),
-        data: fetched(store)
-    };
-};
 
 const incX = () => ({ type: 'INC_X', payload: +Math.random().toFixed(2) });
 const incY = () => ({ type: 'INC_Y', payload: +Math.random().toFixed(2) });
@@ -63,6 +94,14 @@ const fetchData = (query) => async (dispatch) => {
 
 const actions = { incX, incY, incZ };
 
+const mapStateToProps = (store) => {
+    return {
+        ...store,
+        elements: data(store),
+        data: fetched(store)
+    };
+};
+
 const mapDispachToProps = (dispatch) => {
     return ({
         incX: () => dispatch(incX()),
@@ -71,11 +110,13 @@ const mapDispachToProps = (dispatch) => {
         fetchData: (query: 'posts' | 'comments' | 'todos') => dispatch(fetchData(query))
     });
 }
-
-export default compose(
+// export default compose(
+export default reduxCompose(
     withSomeConsumer(), 
     connect(mapStateToProps, mapDispachToProps)
 )(App);
+
+// reduxCompose
 
 // export default withSomeConsumer()(connect(mapStateToProps, mapDispachToProps)(App));
 
@@ -85,3 +126,12 @@ function setRandomArr(): Array<Node>{
     return resultedArr.map(el=><span onClick={() => console.log(el)} style ={{margin: '10px'}} key={uuid()}>{el}</span>);
 }
 
+function WithRoutes() {
+    return (
+        <Switch>
+            <Route path="/as" render={()=><p>Route 1</p>} />
+            <Route path="/as2" render={()=><p>Route 2</p>} />
+            <Route path="/as3" render={()=><p>Route 3</p>} />
+        </Switch>
+    )
+}
