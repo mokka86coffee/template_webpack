@@ -10,7 +10,7 @@ import App from './App.jsx';
 import './index.scss';
 
 const reducer = (store: Object, action: Object) => {
-    console.log('in reducer', action)
+    console.log('in reducer', action);
     switch(action.type) {
         case 'INC_X': return { ...store, x: store.x + action.payload };
         case 'INC_Y': return { ...store, y: store.y + action.payload };
@@ -26,7 +26,7 @@ const logEnhancer = store => dispatch => action => {
         // action: action.type || action,
         // store: store.getState()
     });
-    return dispatch({type: 'logEnhancer'});
+    dispatch({type: 'logEnhancer'});
 }
 
 const stringEnhancer = store => dispatch => action => {
@@ -42,11 +42,7 @@ const { Provider: SomeProvider, Consumer: SomeConsumer } = React.createContext<a
 export function withSomeConsumer() {
     return (Component: ComponentType<empty>) => (props: any) => (
         <SomeConsumer>
-        {
-            (prop) => (
-                <Component {...props} SomeConsumerContext={prop} />
-            )
-        }
+            { (context) =>  <Component {...props} SomeConsumerContext={context} /> }
         </SomeConsumer>
     );
 }

@@ -17,11 +17,7 @@ const fetched = createSelector(({data}) => data, (data) => {
     return result;
 });
 
-type ReactProps = {
-
-};
-
-class NotRender extends Component<ReactProps, {}> {
+class NotRender extends Component<{}, {}> {
 
     state = {
         some: 'soe'
@@ -59,7 +55,7 @@ class App extends Component<{[key:string]: any}>{
         const { x, y, z, incX, incY, incZ, elements, data: ss } = this.props;
         return (
             <>
-                <p>Redux</p>
+                <h1>Redux</h1>
                 <WithRoutes />
                 <p>CountX: {x}</p>
                 <p>CountY: {y}</p>
@@ -116,9 +112,8 @@ export default reduxCompose(
     connect(mapStateToProps, mapDispachToProps)
 )(App);
 
-// reduxCompose
 
-// export default withSomeConsumer()(connect(mapStateToProps, mapDispachToProps)(App));
+// export default withSomeConsumer((connect(mapStateToProps, mapDispachToProps)(App));
 
 function setRandomArr(): Array<Node>{
     console.log('started setRandomArr');
