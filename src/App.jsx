@@ -9,7 +9,7 @@ import {withSomeConsumer} from './';
 import compose from './utils/compose';
 import {compose as reduxCompose} from 'redux';
 import {withRouter, Link, Switch, Route} from 'react-router-dom';
-import {List} from 'react-virtualized';
+import {List, InfiniteLoader} from 'react-virtualized';
 
 
 class NotRender extends Component<{}, {}> {
@@ -42,15 +42,38 @@ const NoRender = compose(
 class App extends Component<{[key:string]: any}>{
 
     componentDidMount() {
-        this.props.fetchData('posts');
+        // this.props.fetchData('posts');
     }
 
     rowRenderer = ({ index, isScrolling, key, style, ...rest }) => {
-        console.log('rest - ', rest);
-        return (this.props.data.length > 1) && (
-            <div key={key}>{this.props.data[index] || 'fetching'}</div>
-        );
+        console.log('data length - ', _.get(this, 'props.data.length'));
+        console.log('current index - ', index);
+        return this.props.data[index] 
+        ? (
+            <div style={style} key={key}>
+                <h2>{this.props.data[index].title || 'fetching'}</h2>
+                <span>{this.props.data[index].body || ''}</span>
+            </div>
+        )
+        : (
+            <div style={style} key={key}>
+                <h2>{'fetching'}</h2>
+            </div>
+        )
+        ;
     };
+
+    isRowLoaded ({ index }) {
+        console.log('in isRowLoaded - ', !!_.get(this, 'props.data.[index]'));
+        console.log('in isRowLoaded - ', this);
+        return !!_.get(this, 'props.data.[index]');
+    }
+
+    loadMoreRows = ({startIndex, stopIndex}) => {
+        console.log('in loadMoreRows startIndex - ', startIndex);
+        console.log('in loadMoreRows stopIndex - ', stopIndex);
+        this.props.fetchData('posts', {startIndex, stopIndex});
+    }
 
     render(){
         const { x, y, z, incX, incY, incZ, elements, data } = this.props;
@@ -72,14 +95,40 @@ class App extends Component<{[key:string]: any}>{
                 <NoRender />
                 {/* <div style={{display: 'flex', flexWrap: 'wrap'}}>{data}</div> */}
                 {/* <div style={{backgroundColor: 'skyblue'}}>{elements}</div> */}
-                <List
-                    rowCount={data.length}
-                    width={800}
-                    height={800}
-                    rowHeight={20}
-                    rowRenderer={this.rowRenderer}
-                    overscanRowCount={3}
-                />
+                {/* {(data.length > 1) && data.map((el,idx) => (
+                    <div key={idx}>
+                        <h2>{el.title || 'fetching'}</h2>
+                        <span>{el.body || ''}</span>
+                    </div>
+                ))} */}
+                <InfiniteLoader
+                    isRowLoaded={({ index }) => {
+                        // console.log('in isRowLoaded index - ', index);
+                        // console.log('in boolean isRowLoaded data[index] - ', Boolean(this.props.data));
+                        // console.log('in isRowLoaded data[index] - ', this.props.data[index]);
+                        // console.log('in isRowLoaded this - ', this);
+                        return Boolean(this.props.data[index]);
+                    }}
+                    loadMoreRows={this.loadMoreRows}
+                    rowCount={10000}
+                >
+                    {({ onRowsRendered, registerChild }) => (
+                        <List
+                            threshold
+                            rowCount={data.length}
+                            width={800}
+                            height={600}
+                            rowHeight={100}
+                            onRowsRendered={onRowsRendered}
+                            ref={registerChild}
+                            rowCount={100}
+                            style={{backgroundColor: 'skyblue'}}
+                            rowRenderer={this.rowRenderer}
+                            // overscanRowCount={3}
+                            // rowGetter={({ index }) => this.props.loadedData[index]}
+                        />
+                    )}
+                </InfiniteLoader>
             </>
         );
     }
@@ -88,19 +137,33 @@ class App extends Component<{[key:string]: any}>{
 
 const data = createSelector(({z}) => z, setRandomArr);
 const fetched = createSelector(({data}) => data, (data) => {
+    console.log('in createSelector fetched', data);
     const result = data.map(el => (<span key={uuid()}>{el.name}</span>));
-    console.log('in createSelector fetched', result);
-    return result;
+    // return result;
+    return data;
 });
 
 const incX = () => ({ type: 'INC_X', payload: +Math.random().toFixed(2) });
 const incY = () => ({ type: 'INC_Y', payload: +Math.random().toFixed(2) });
 const incZ = () => ({ type: 'INC_Z', payload: +Math.random().toFixed(2) });
-const fetchData = (query) => async (dispatch) => {
+const fetchData = (query, params) => async (dispatch, getState) => {
+    let bufferedFetched = getState().data.length ? [...getState().data] : [],
+    finalRowIndex = 1e6;
     dispatch('FETCH_START');
-    const fetched = await fetch(`https://jsonplaceholder.typicode.com/${query}`);
-    const data = await fetched.json();
-    dispatch({ type: 'FETCH_DONE', payload: data });
+    let {startIndex, stopIndex} = params;
+    console.log('startIndex - ', startIndex);
+    console.log('endIndex - ', stopIndex);
+    while(startIndex <= stopIndex) {
+        try{
+            const fetched = await fetch(`https://jsonplaceholder.typicode.com/${query}/${startIndex+1}`);
+            const data = await fetched.json();
+            bufferedFetched.push(data);
+            startIndex++;
+        } catch (err) {
+            finalRowIndex = bufferedFetched.length;
+        }
+    }
+    dispatch({ type: 'FETCH_DONE', payload: {data: bufferedFetched, finalRowIndex} });
 }
 
 const actions = { incX, incY, incZ };
@@ -118,7 +181,7 @@ const mapDispachToProps = (dispatch) => {
         incX: () => dispatch(incX()),
         incY: () => dispatch(incY()),
         incZ: () => dispatch(incZ()),
-        fetchData: (query: 'posts' | 'comments' | 'todos') => dispatch(fetchData(query))
+        fetchData: (query: 'posts' | 'comments' | 'todos', params: {[key: string]: number}) => dispatch(fetchData(query, params))
     });
 }
 // export default compose(

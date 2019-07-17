@@ -16,7 +16,7 @@ const reducer = (store: Object, action: Object) => {
         case 'INC_Y': return { ...store, y: store.y + action.payload };
         case 'INC_Z': return { ...store, z: store.z + action.payload };
         // case 'logEnhancer': return { ...store, zz: Math.random() };
-        case 'FETCH_DONE': return { ...store, data: action.payload };
+        case 'FETCH_DONE': return { ...store, data: action.payload.data, finalRowIndex: action.payload.finalRowIndex };
         default: (action: empty); return store;
     }
 };
@@ -35,7 +35,7 @@ const stringEnhancer = store => dispatch => action => {
     return dispatch(action);
 }
 
-const initialState = { x: 0, y: 0, z: 0, data: [{name: 'fetching ...'}] };
+const initialState = { x: 0, y: 0, z: 0, data: [] };
 const store = createStore(reducer, initialState, applyMiddleware(thunk, stringEnhancer, logEnhancer));
 
 const { Provider: SomeProvider, Consumer: SomeConsumer } = React.createContext<any>();
