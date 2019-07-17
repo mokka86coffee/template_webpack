@@ -15,7 +15,7 @@ const reducer = (store: Object, action: Object) => {
         case 'INC_X': return { ...store, x: store.x + action.payload };
         case 'INC_Y': return { ...store, y: store.y + action.payload };
         case 'INC_Z': return { ...store, z: store.z + action.payload };
-        case 'logEnhancer': return { ...store, zz: Math.random() };
+        // case 'logEnhancer': return { ...store, zz: Math.random() };
         case 'FETCH_DONE': return { ...store, data: action.payload };
         default: (action: empty); return store;
     }
@@ -26,7 +26,8 @@ const logEnhancer = store => dispatch => action => {
         // action: action.type || action,
         // store: store.getState()
     });
-    dispatch({type: 'logEnhancer'});
+    // dispatch({type: 'logEnhancer'});
+    dispatch(action);
 }
 
 const stringEnhancer = store => dispatch => action => {

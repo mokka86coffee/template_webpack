@@ -9,13 +9,8 @@ import {withSomeConsumer} from './';
 import compose from './utils/compose';
 import {compose as reduxCompose} from 'redux';
 import {withRouter, Link, Switch, Route} from 'react-router-dom';
+import {List} from 'react-virtualized';
 
-const data = createSelector(({z}) => z, setRandomArr);
-const fetched = createSelector(({data}) => data, (data) => {
-    const result = data.map(el => (<span key={uuid()}>{el.name}</span>));
-    console.log('in createSelector fetched', result);
-    return result;
-});
 
 class NotRender extends Component<{}, {}> {
 
@@ -24,7 +19,7 @@ class NotRender extends Component<{}, {}> {
     }
 
     shouldComponentUpdate(...args) {
-        console.log('args - ', args);
+        // console.log('args - ', args);
         return false;
     }
 
@@ -47,12 +42,18 @@ const NoRender = compose(
 class App extends Component<{[key:string]: any}>{
 
     componentDidMount() {
-        this.props.fetchData('users');
+        this.props.fetchData('posts');
     }
 
+    rowRenderer = ({ index, isScrolling, key, style, ...rest }) => {
+        console.log('rest - ', rest);
+        return (this.props.data.length > 1) && (
+            <div key={key}>{this.props.data[index] || 'fetching'}</div>
+        );
+    };
+
     render(){
-        console.log('props - ', this.props);
-        const { x, y, z, incX, incY, incZ, elements, data: ss } = this.props;
+        const { x, y, z, incX, incY, incZ, elements, data } = this.props;
         return (
             <>
                 <h1>Redux</h1>
@@ -67,16 +68,30 @@ class App extends Component<{[key:string]: any}>{
                     <button onClick={incX}>incX</button>
                     <button onClick={incY}>incY</button>
                     <button onClick={incZ}>incZ</button>
-                    <button onClick={incZ}>incZ</button>
                 </div>
                 <NoRender />
-                <div style={{display: 'flex', flexWrap: 'wrap'}}>{ss}</div>
-                <div style={{display: 'flex', flexWrap: 'wrap'}}>{elements}</div>
+                {/* <div style={{display: 'flex', flexWrap: 'wrap'}}>{data}</div> */}
+                {/* <div style={{backgroundColor: 'skyblue'}}>{elements}</div> */}
+                <List
+                    rowCount={data.length}
+                    width={800}
+                    height={800}
+                    rowHeight={20}
+                    rowRenderer={this.rowRenderer}
+                    overscanRowCount={3}
+                />
             </>
         );
     }
 }
 
+
+const data = createSelector(({z}) => z, setRandomArr);
+const fetched = createSelector(({data}) => data, (data) => {
+    const result = data.map(el => (<span key={uuid()}>{el.name}</span>));
+    console.log('in createSelector fetched', result);
+    return result;
+});
 
 const incX = () => ({ type: 'INC_X', payload: +Math.random().toFixed(2) });
 const incY = () => ({ type: 'INC_Y', payload: +Math.random().toFixed(2) });
@@ -118,7 +133,7 @@ export default reduxCompose(
 function setRandomArr(): Array<Node>{
     console.log('started setRandomArr');
     const resultedArr = Array(1000).fill(0).map(el=>Math.random().toFixed(2));
-    return resultedArr.map(el=><span onClick={() => console.log(el)} style ={{margin: '10px'}} key={uuid()}>{el}</span>);
+    return resultedArr.map(el=><p style={{color: 'white', textAlign: 'center'}} onClick={() => console.log(el)} style ={{margin: '10px'}} key={uuid()}>{el}</p>);
 }
 
 function WithRoutes() {
