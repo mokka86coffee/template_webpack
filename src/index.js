@@ -16,7 +16,8 @@ const reducer = (store: Object, action: Object) => {
         case 'INC_Y': return { ...store, y: store.y + action.payload };
         case 'INC_Z': return { ...store, z: store.z + action.payload };
         // case 'logEnhancer': return { ...store, zz: Math.random() };
-        case 'FETCH_DONE': return { ...store, data: action.payload.data, finalRowIndex: action.payload.finalRowIndex };
+        case 'FETCH_START': return { ...store, loadingData: true };
+        case 'FETCH_DONE': return { ...store, data: action.payload.data, loadingData: false };
         default: (action: empty); return store;
     }
 };
@@ -48,14 +49,44 @@ export function withSomeConsumer() {
     );
 }
 
+class ErrorBoundary extends React.Component<{|children: Object|}, {hasError: boolean}> {
+
+    state = { hasError: false, fakeLoading: '' };
+
+    static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+        return { hasError: true };
+    }
+
+    componentDidCatch(error, info) {
+        // You can also log the error to an error reporting service
+        // logErrorToMyService(error, info);
+        console.log('in cDC error - ', error);
+        console.log('in cDC info - ', info);
+        console.log('in typeof error - ', typeof error);
+        console.log('in typeof info - ', typeof info);
+        this.setState({ hasError: true });
+    }
+
+    render() {
+        if (this.state.hasError) {
+            // You can render any custom fallback UI
+            return <h1>Something went wrong.</h1>;
+        }
+        return this.props.children; 
+    }
+}
+
 ReactDOM.render(
-    <Provider store={store}>
-        <Router>
-            <SomeProvider value={[()=>{},()=>{},()=>{}]}>
-                <Route path='/' component={App}/>
-            </SomeProvider>
-        </Router>
-    </Provider>, 
+    <ErrorBoundary>
+        <Provider store={store}>
+            <Router>
+                <SomeProvider value={[()=>{},()=>{},()=>{}]}>
+                    <Route path='/' component={App}/>
+                </SomeProvider>
+            </Router>
+        </Provider>
+    </ErrorBoundary>, 
 // $FlowIgnore
     document.querySelector('#root')
 );

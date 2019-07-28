@@ -1,16 +1,23 @@
 // @flow
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import type {Node} from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import uuid from 'uuid/v4';
-import _ from 'lodash';
+import _, {isEqual} from 'lodash';
 import {withSomeConsumer} from './';
 import compose from './utils/compose';
 import {compose as reduxCompose} from 'redux';
 import {withRouter, Link, Switch, Route} from 'react-router-dom';
 import {List, InfiniteLoader} from 'react-virtualized';
 
+const Jook = React.memo(() => {
+    console.log("TCL: Jook", Jook)
+    useEffect(()=>{
+        return () => {};
+    },[])
+    return <p>Jook</p>   
+}, (prevProps, props) => !isEqual(props, prevProps));
 
 class NotRender extends Component<{}, {}> {
 
@@ -39,16 +46,16 @@ const NoRender = compose(
     )
 )(NotRender);
 
-class App extends Component<{[key:string]: any}>{
+class App extends Component<{[key:string]: any}, {[key:string]: any}>{
+
 
     componentDidMount() {
-        // this.props.fetchData('posts');
+        this.props.fetchData('posts');
     }
 
     rowRenderer = ({ index, isScrolling, key, style, ...rest }) => {
-        console.log('data length - ', _.get(this, 'props.data.length'));
-        console.log('current index - ', index);
-        return this.props.data[index] 
+
+        return this.props.data[index]
         ? (
             <div style={style} key={key}>
                 <h2>{this.props.data[index].title || 'fetching'}</h2>
@@ -63,24 +70,23 @@ class App extends Component<{[key:string]: any}>{
         ;
     };
 
-    isRowLoaded ({ index }) {
-        console.log('in isRowLoaded - ', !!_.get(this, 'props.data.[index]'));
-        console.log('in isRowLoaded - ', this);
-        return !!_.get(this, 'props.data.[index]');
-    }
-
     loadMoreRows = ({startIndex, stopIndex}) => {
-        console.log('in loadMoreRows startIndex - ', startIndex);
-        console.log('in loadMoreRows stopIndex - ', stopIndex);
-        this.props.fetchData('posts', {startIndex, stopIndex});
+        if (!this.props.isLoading) {
+           this.props.fetchData('posts', {startIndex, stopIndex});
+        }
     }
 
     render(){
+        // const Lazy = React.lazy(() => new Promise(r => setTimeout(() => r(import('./components/lazyComponent')), 1000)));
+        const Lazy = React.lazy(() => import('./components/lazyComponent'));
         const { x, y, z, incX, incY, incZ, elements, data } = this.props;
         return (
             <>
                 <h1>Redux</h1>
                 <WithRoutes />
+                <React.Suspense fallback={<p>Loading.....</p>}>
+                    <Lazy />
+                </React.Suspense>
                 <p>CountX: {x}</p>
                 <p>CountY: {y}</p>
                 <p>CountZ: {z}</p>
@@ -92,36 +98,24 @@ class App extends Component<{[key:string]: any}>{
                     <button onClick={incY}>incY</button>
                     <button onClick={incZ}>incZ</button>
                 </div>
+                <Jook aa={Math.random()} />
                 <NoRender />
-                {/* <div style={{display: 'flex', flexWrap: 'wrap'}}>{data}</div> */}
-                {/* <div style={{backgroundColor: 'skyblue'}}>{elements}</div> */}
-                {/* {(data.length > 1) && data.map((el,idx) => (
-                    <div key={idx}>
-                        <h2>{el.title || 'fetching'}</h2>
-                        <span>{el.body || ''}</span>
-                    </div>
-                ))} */}
                 <InfiniteLoader
                     isRowLoaded={({ index }) => {
-                        // console.log('in isRowLoaded index - ', index);
-                        // console.log('in boolean isRowLoaded data[index] - ', Boolean(this.props.data));
-                        // console.log('in isRowLoaded data[index] - ', this.props.data[index]);
-                        // console.log('in isRowLoaded this - ', this);
                         return Boolean(this.props.data[index]);
                     }}
                     loadMoreRows={this.loadMoreRows}
-                    rowCount={10000}
+                    rowCount={this.props.data.length ? this.props.data.length : 10}
                 >
                     {({ onRowsRendered, registerChild }) => (
                         <List
-                            threshold
                             rowCount={data.length}
                             width={800}
                             height={600}
                             rowHeight={100}
                             onRowsRendered={onRowsRendered}
                             ref={registerChild}
-                            rowCount={100}
+                            rowCount={this.props.data.length ? this.props.data.length+1 : 10}
                             style={{backgroundColor: 'skyblue'}}
                             rowRenderer={this.rowRenderer}
                             // overscanRowCount={3}
@@ -151,14 +145,17 @@ const fetchData = (query, params) => async (dispatch, getState) => {
     finalRowIndex = 1e6;
     dispatch('FETCH_START');
     let {startIndex, stopIndex} = params;
-    console.log('startIndex - ', startIndex);
-    console.log('endIndex - ', stopIndex);
     while(startIndex <= stopIndex) {
         try{
             const fetched = await fetch(`https://jsonplaceholder.typicode.com/${query}/${startIndex+1}`);
             const data = await fetched.json();
-            bufferedFetched.push(data);
-            startIndex++;
+            if (Object.keys(data).length) {
+                bufferedFetched.push(data);
+                startIndex++;
+            }
+            else {
+                break; // module
+            }
         } catch (err) {
             finalRowIndex = bufferedFetched.length;
         }
@@ -197,7 +194,7 @@ function setRandomArr(): Array<Node>{
     console.log('started setRandomArr');
     const resultedArr = Array(1000).fill(0).map(el=>Math.random().toFixed(2));
     return resultedArr.map(el=><p style={{color: 'white', textAlign: 'center'}} onClick={() => console.log(el)} style ={{margin: '10px'}} key={uuid()}>{el}</p>);
-}
+};
 
 function WithRoutes() {
     return (
@@ -207,4 +204,4 @@ function WithRoutes() {
             <Route path="/as3" render={()=><p>Route 3</p>} />
         </Switch>
     )
-}
+};
