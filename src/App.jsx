@@ -48,9 +48,17 @@ const NoRender = compose(
 
 class App extends Component<{[key:string]: any}, {[key:string]: any}>{
 
+    state = {
+        scrollTop: 0
+    }
 
     componentDidMount() {
         this.props.fetchData('posts');
+        window.addEventListener('scroll', this.resizeWindow);
+    }
+
+    resizeWindow = ({ target: { scrollingElement: { scrollTop } } }) => {
+        this.setState({scrollTop})
     }
 
     rowRenderer = ({ index, isScrolling, key, style, ...rest }) => {
@@ -80,9 +88,11 @@ class App extends Component<{[key:string]: any}, {[key:string]: any}>{
         // const Lazy = React.lazy(() => new Promise(r => setTimeout(() => r(import('./components/lazyComponent')), 1000)));
         const Lazy = React.lazy(() => import('./components/lazyComponent'));
         const { x, y, z, incX, incY, incZ, elements, data } = this.props;
+        const { scrollTop } = this.state;
         return (
             <>
                 <h1>Redux</h1>
+                <h2>{scrollTop}</h2>
                 <WithRoutes />
                 <React.Suspense fallback={<p>Loading.....</p>}>
                     <Lazy />
