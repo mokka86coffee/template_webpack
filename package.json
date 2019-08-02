@@ -14,6 +14,7 @@
     "react-redux": "^6.0.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
+    "react-transition-group": "^4.2.1",
     "react-virtualized": "^9.21.1",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.7",
@@ -74,7 +75,9 @@
           "loose": true
         }
       ],
-      ["@babel/plugin-syntax-dynamic-import"]
+      [
+        "@babel/plugin-syntax-dynamic-import"
+      ]
     ]
   },
   "scripts": {

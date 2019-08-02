@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, useEffect } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import type {Node} from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -10,6 +10,7 @@ import compose from './utils/compose';
 import {compose as reduxCompose} from 'redux';
 import {withRouter, Link, Switch, Route} from 'react-router-dom';
 import {List, InfiniteLoader} from 'react-virtualized';
+import { CSSTransition } from 'react-transition-group';
 
 const Jook = React.memo(() => {
     console.log("TCL: Jook", Jook)
@@ -18,6 +19,31 @@ const Jook = React.memo(() => {
     },[])
     return <p>Jook</p>   
 }, (prevProps, props) => !isEqual(props, prevProps));
+
+const Nav = React.memo((props) => {
+    const [opened, handleOpened] = useState(false);
+    return (
+        <div>
+            <button 
+                style={{backgroundColor: '#ffeb3b', border: 'none', borderRadius: '10px', outline: 'none'}}
+                onClick={() => handleOpened(!opened)}
+            >
+                Menu
+            </button>
+            <CSSTransition
+                in={opened}
+            >
+                <ul style={{backgroundColor: '#ffeb3b', listStyle: 'none', width: 100, padding: 10, textAlign: 'center', borderRadius: '10px'}}>
+                    <li>Пункт 1</li>
+                    <li>Пункт 2</li>
+                    <li>Пункт 3</li>
+                    <li>Пункт 4</li>
+                    <li>Пункт 5</li>
+                </ul>
+            </CSSTransition>
+        </div>
+    )
+});
 
 class NotRender extends Component<{}, {}> {
 
@@ -36,7 +62,7 @@ class NotRender extends Component<{}, {}> {
             <p>in NotRender</p>
         )
     }
-}
+};
 
 const NoRender = compose(
     withRouter,
@@ -84,6 +110,7 @@ class App extends Component<{[key:string]: any}, {[key:string]: any}>{
         }
     }
 
+
     render(){
         // const Lazy = React.lazy(() => new Promise(r => setTimeout(() => r(import('./components/lazyComponent')), 1000)));
         const Lazy = React.lazy(() => import('./components/lazyComponent'));
@@ -93,6 +120,7 @@ class App extends Component<{[key:string]: any}, {[key:string]: any}>{
             <>
                 <h1>Redux</h1>
                 <h2>{scrollTop}</h2>
+                <Nav />
                 <WithRoutes />
                 <React.Suspense fallback={<p>Loading.....</p>}>
                     <Lazy />
