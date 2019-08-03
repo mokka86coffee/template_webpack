@@ -10,7 +10,10 @@ import compose from './utils/compose';
 import {compose as reduxCompose} from 'redux';
 import {withRouter, Link, Switch, Route} from 'react-router-dom';
 import {List, InfiniteLoader} from 'react-virtualized';
-import { CSSTransition } from 'react-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import cx from 'classnames';
+import styles from './index.scss';
+import { RouteComponent1, RouteComponent2, RouteComponent3 } from './components/routes.jsx';
 
 const Jook = React.memo(() => {
     console.log("TCL: Jook", Jook)
@@ -20,8 +23,11 @@ const Jook = React.memo(() => {
     return <p>Jook</p>   
 }, (prevProps, props) => !isEqual(props, prevProps));
 
-const Nav = React.memo((props) => {
+const Nav = React.memo(({location: {pathname}}) => {
     const [opened, handleOpened] = useState(false);
+    useEffect((...args) => {
+        handleOpened(false);
+    }, [pathname]);
     return (
         <div>
             <button 
@@ -32,13 +38,24 @@ const Nav = React.memo((props) => {
             </button>
             <CSSTransition
                 in={opened}
+                timeout={200}
+                classNames={{
+                    enter: styles.nav,
+                    enterActive: styles['nav-enter-active'],
+                    enterDone: cx(styles['nav-enter-done'], styles.nav),
+                }}
+                unmountOnExit
+                onEnter={() => console.log('onEnter')}
+                onEntering={() => console.log('onEntering')}
+                onEntered={() => console.log('onEntered')}
+                onExit={() => console.log('onExit')}
+                onExiting={() => console.log('onExiting')}
+                onExited={() => console.log('onExited')}
             >
-                <ul style={{backgroundColor: '#ffeb3b', listStyle: 'none', width: 100, padding: 10, textAlign: 'center', borderRadius: '10px'}}>
-                    <li>Пункт 1</li>
-                    <li>Пункт 2</li>
-                    <li>Пункт 3</li>
-                    <li>Пункт 4</li>
-                    <li>Пункт 5</li>
+                <ul>
+                    <li><Link to="/route1">Пункт 1</Link></li>
+                    <li><Link to="/route2">Пункт 2</Link></li>
+                    <li><Link to="/route3">Пункт 3</Link></li>
                 </ul>
             </CSSTransition>
         </div>
@@ -75,8 +92,13 @@ const NoRender = compose(
 class App extends Component<{[key:string]: any}, {[key:string]: any}>{
 
     state = {
-        scrollTop: 0
+        scrollTop: 0,
+        counter: 0,
+        counterNotFn: 0
     }
+
+    counterInterval = null;
+    counterNotFnInterval = null;
 
     componentDidMount() {
         this.props.fetchData('posts');
@@ -114,13 +136,35 @@ class App extends Component<{[key:string]: any}, {[key:string]: any}>{
     render(){
         // const Lazy = React.lazy(() => new Promise(r => setTimeout(() => r(import('./components/lazyComponent')), 1000)));
         const Lazy = React.lazy(() => import('./components/lazyComponent'));
-        const { x, y, z, incX, incY, incZ, elements, data } = this.props;
-        const { scrollTop } = this.state;
+        const { x, y, z, incX, incY, incZ, elements, data, location } = this.props;
+        const { scrollTop, counter, counterNotFn } = this.state;
         return (
             <>
                 <h1>Redux</h1>
                 <h2>{scrollTop}</h2>
-                <Nav />
+                <h2>Fn: {counter}</h2>
+                <h2>Not Fn: {counterNotFn}</h2>
+                <TransitionGroup>
+                    <CSSTransition
+                        key={location.key}
+                        timeout={5200}
+                        classNames={{
+                            enter: cx(styles.swipe, styles['swipe-enter']),
+                            enterActive: cx(styles.swipe, styles['swipe-enter-active']),
+                            exit: cx(styles.swipe, styles['swipe-exit-active']),
+                            exitActive: cx(styles.swipe, styles['swipe-exit-active'])
+                        }}
+                    >
+                        <div>
+                            <Switch>
+                                <Route exact path="/route1" render={() => <RouteComponent1 />} />
+                                <Route exact path="/route2" component={RouteComponent2} />
+                                <Route exact path="/route3" component={RouteComponent3} />
+                            </Switch>
+                        </div>
+                    </CSSTransition>
+                </TransitionGroup>
+                <Nav location={this.props.location} />
                 <WithRoutes />
                 <React.Suspense fallback={<p>Loading.....</p>}>
                     <Lazy />

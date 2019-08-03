@@ -10,3 +10,45 @@ span {
     font-size: 14px;
     background-color: skyblue;
 }
+
+.nav {
+    background-color: #ffeb3b;
+    list-style: none;
+    width: 100px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+    transition: 2s;
+    
+    &-enter-active {
+        background-color: #000;
+        color: #fff;
+    }
+
+    &-enter-done {
+        background-color: rgb(17, 85, 43);
+        color: rgb(255, 255, 255);
+    }
+}
+
+.swipe {
+    width: 500px;
+    background-color: skyblue;
+    transition: all 1s;
+
+    &-enter {
+        opacity: 0;
+        transform: translateY(-100px);
+    }
+
+    &-enter-active,
+    &-exit {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    &-exit-active {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+}
