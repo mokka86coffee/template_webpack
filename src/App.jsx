@@ -13,7 +13,7 @@ import {List, InfiniteLoader} from 'react-virtualized';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import cx from 'classnames';
 import styles from './index.scss';
-import { RouteComponent1, RouteComponent2, RouteComponent3 } from './components/routes.jsx';
+import RouteComponent from './components/routes.jsx';
 
 const Jook = React.memo(() => {
     console.log("TCL: Jook", Jook)
@@ -144,26 +144,24 @@ class App extends Component<{[key:string]: any}, {[key:string]: any}>{
                 <h2>{scrollTop}</h2>
                 <h2>Fn: {counter}</h2>
                 <h2>Not Fn: {counterNotFn}</h2>
-                <TransitionGroup>
-                    <CSSTransition
-                        key={location.key}
-                        timeout={5200}
-                        classNames={{
-                            enter: cx(styles.swipe, styles['swipe-enter']),
-                            enterActive: cx(styles.swipe, styles['swipe-enter-active']),
-                            exit: cx(styles.swipe, styles['swipe-exit-active']),
-                            exitActive: cx(styles.swipe, styles['swipe-exit-active'])
-                        }}
-                    >
-                        <div>
-                            <Switch>
-                                <Route exact path="/route1" render={() => <RouteComponent1 />} />
-                                <Route exact path="/route2" component={RouteComponent2} />
-                                <Route exact path="/route3" component={RouteComponent3} />
-                            </Switch>
-                        </div>
-                    </CSSTransition>
-                </TransitionGroup>
+                <div className={styles.swipe__container}>
+                    <TransitionGroup>
+                        <CSSTransition
+                            key={location.key}
+                            timeout={15000}
+                            classNames={{
+                                enter: cx(styles.swipe, styles['swipe-enter']),
+                                enterActive: cx(styles.swipe, styles['swipe-enter-active']),
+                                enterDone: cx(styles.swipe, styles['swipe-enter-active']),
+                                exit: cx(styles.swipe, styles['swipe-exit-active']),
+                                exitActive: cx(styles.swipe, styles['swipe-exit-active']),
+                                exitDone: cx(styles.swipe, styles['swipe-exit-active'])
+                            }}
+                        >
+                            <Route path="/:id" component={RouteComponent} />
+                        </CSSTransition>
+                    </TransitionGroup>
+                </div>
                 <Nav location={this.props.location} />
                 <WithRoutes />
                 <React.Suspense fallback={<p>Loading.....</p>}>
@@ -278,7 +276,8 @@ function setRandomArr(): Array<Node>{
     return resultedArr.map(el=><p style={{color: 'white', textAlign: 'center'}} onClick={() => console.log(el)} style ={{margin: '10px'}} key={uuid()}>{el}</p>);
 };
 
-function WithRoutes() {
+function WithRoutes(props) {
+    console.log("TCL: WithRoutes -> props", props)
     return (
         <Switch>
             <Route path="/as" render={()=><p>Route 1</p>} />
