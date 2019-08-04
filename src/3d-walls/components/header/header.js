@@ -7,7 +7,6 @@ class Header extends React.Component {
     state = {
         currentChild: null,
         newChild: this.props.children[0].component,
-        animate: false,
         path: this.props.location.pathname
     }
 
@@ -33,7 +32,7 @@ class Header extends React.Component {
         
         return (
             <header className={styles.header}>
-                {currentChild || <Route path='/:id' render={(props) => React.cloneElement(<NewChild />, { ...props, animate })} />}
+                {currentChild || <Route path='/:id' render={(props) => React.cloneElement(<NewChild />, { ...props, animate: false })} />}
             </header>
         );
     }
