@@ -21,14 +21,14 @@ class Header extends React.Component {
                 const child = <Route path='/:id' render={() => React.cloneElement(<NewChild />, {match: {params: {id}}, animate: true })} />
                 this.setState(
                     {currentChild: child, newChild: this.props.children[0].component, path: newPath},
-                    () => setTimeout(() => this.setState({currentChild: null, animate: false}), 1000)
+                    () => setTimeout(() => this.setState({currentChild: null}), 1000)
                 );
             }
         }
     }
 
     render() {
-        const { currentChild, newChild: NewChild, animate } = this.state;
+        const { currentChild, newChild: NewChild } = this.state;
         
         return (
             <header className={styles.header}>

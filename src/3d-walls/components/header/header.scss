@@ -22,7 +22,8 @@ $timeout: 1s;
     transition: transform $timeout, opacity $timeout;
 
     &--animate-start {
-        transform: perspective(400px) translateZ(-144px) rotate3D(2, 1, -1, 35deg);
+        opacity: 0;
+        transform: perspective(400px) scale(2) translateZ(-144px) rotate3D(2, 1, -1, 35deg);
     }
 
     &--animate-end {
@@ -42,7 +43,8 @@ $timeout: 1s;
     transform: perspective(500px) translateZ(-110px) rotate3d(1, 6, 3, 45deg);
 
     &--animate-start {
-        transform: perspective(400px) translateZ(-144px) rotate3D(2, 1, -1, 35deg);
+        opacity: 0;
+        transform: perspective(400px) translateX(200px) scale(2) translateZ(-144px) rotate3D(2, 1, -1, 35deg);
     }
 
     &--animate-end {
