@@ -45,12 +45,12 @@ const Nav = React.memo(({location: {pathname}}) => {
                     enterDone: cx(styles['nav-enter-done'], styles.nav),
                 }}
                 unmountOnExit
-                onEnter={() => console.log('onEnter')}
-                onEntering={() => console.log('onEntering')}
-                onEntered={() => console.log('onEntered')}
-                onExit={() => console.log('onExit')}
-                onExiting={() => console.log('onExiting')}
-                onExited={() => console.log('onExited')}
+                // onEnter={() => console.log('onEnter')}
+                // onEntering={() => console.log('onEntering')}
+                // onEntered={() => console.log('onEntered')}
+                // onExit={() => console.log('onExit')}
+                // onExiting={() => console.log('onExiting')}
+                // onExited={() => console.log('onExited')}
             >
                 <ul>
                     <li><Link to="/route1">Пункт 1</Link></li>
@@ -92,9 +92,7 @@ const NoRender = compose(
 class App extends Component<{[key:string]: any}, {[key:string]: any}>{
 
     state = {
-        scrollTop: 0,
-        counter: 0,
-        counterNotFn: 0
+        scrollTop: 0
     }
 
     counterInterval = null;
@@ -134,16 +132,14 @@ class App extends Component<{[key:string]: any}, {[key:string]: any}>{
 
 
     render(){
-        // const Lazy = React.lazy(() => new Promise(r => setTimeout(() => r(import('./components/lazyComponent')), 1000)));
-        const Lazy = React.lazy(() => import('./components/lazyComponent'));
+        const Lazy = React.lazy(() => new Promise(r => setTimeout(() => r(import('./components/lazyComponent')), 1000)));
+        // const Lazy = React.lazy(() => import('./components/lazyComponent'));
         const { x, y, z, incX, incY, incZ, elements, data, location } = this.props;
-        const { scrollTop, counter, counterNotFn } = this.state;
+        const { scrollTop } = this.state;
         return (
             <>
                 <h1>Redux</h1>
                 <h2>{scrollTop}</h2>
-                <h2>Fn: {counter}</h2>
-                <h2>Not Fn: {counterNotFn}</h2>
                 <div className={styles.swipe__container}>
                     <TransitionGroup>
                         <CSSTransition
@@ -170,16 +166,26 @@ class App extends Component<{[key:string]: any}, {[key:string]: any}>{
                 <p>CountX: {x}</p>
                 <p>CountY: {y}</p>
                 <p>CountZ: {z}</p>
+
+                
                 <Link to="/as">as</Link>
                 <Link to="/as2">as2</Link>
                 <Link to="/as3">as3</Link>
+
+
                 <div>
                     <button onClick={incX}>incX</button>
                     <button onClick={incY}>incY</button>
                     <button onClick={incZ}>incZ</button>
                 </div>
+
+
                 <Jook aa={Math.random()} />
+
+
                 <NoRender />
+
+
                 <InfiniteLoader
                     isRowLoaded={({ index }) => {
                         return Boolean(this.props.data[index]);
@@ -213,7 +219,6 @@ const data = createSelector(({z}) => z, setRandomArr);
 const fetched = createSelector(({data}) => data, (data) => {
     console.log('in createSelector fetched', data);
     const result = data.map(el => (<span key={uuid()}>{el.name}</span>));
-    // return result;
     return data;
 });
 
@@ -277,7 +282,6 @@ function setRandomArr(): Array<Node>{
 };
 
 function WithRoutes(props) {
-    console.log("TCL: WithRoutes -> props", props)
     return (
         <Switch>
             <Route path="/as" render={()=><p>Route 1</p>} />

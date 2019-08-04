@@ -8,6 +8,7 @@ body {
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    margin: 0;
 }
 
 span {
@@ -44,9 +45,8 @@ span {
 
     &__container {
         position: relative;
-        height: 200px;
+        margin-left: 30%;
         width: 500px;
-        overflow: hidden;
     }
 
     &-enter {

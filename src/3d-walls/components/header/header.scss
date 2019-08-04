@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css?family=Kaushan+Script|Playfair+Display:900&display=swap');
+.header {
+    position: relative;
+    height: 100vh;
+    background: url(https://yellowhome.ru/wp-content/uploads/2016/10/21-36.jpg) 0 0 no-repeat/cover;
+
+    & * {
+        background-color: transparent;
+    }
+}
+
+.fontDigit {
+    position: absolute;
+    top: 30%;
+    left: 20%;
+    font-family: 'Playfair Display', serif;
+    line-height: 150px;
+    font-size: 540px;
+    color: rgba(255, 255, 255, 0.589);
+}
+
+.fontTitle {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    font-family: 'Kaushan Script', cursive;
+    font-size: 120px;
+    color: #eee;
+    text-shadow: 1px 1px 4px #000000b0, 1px 1px 3px #000, 1px 1px 4px #000;
+    transition: transform 1s, opacity 1s;
+    transform: perspective(500px) translateZ(-110px) rotate3d(1, 6, 3, 45deg);
+
+    &--animate-start {
+        transform: perspective(400px) translateZ(-144px) rotate3D(2, 1, -1, 35deg);
+    }
+
+    &--animate-end {
+        opacity: 0;
+    }
+
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 80%;
+        left: 8%;
+        width: 600px;
+        height: 20px;
+        // box-shadow: 0 50px 20px yellow;
+
+    }
+}

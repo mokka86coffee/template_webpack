@@ -9,6 +9,9 @@ import {BrowserRouter as Router, Route} from 'react-router-dom';
 import App from './App.jsx';
 import './index.scss';
 
+// 3DWalls
+import Walls3D from './3d-walls/App';
+
 const reducer = (store: Object, action: Object) => {
     console.log('in reducer', action);
     switch(action.type) {
@@ -73,16 +76,19 @@ class ErrorBoundary extends React.Component<{|children: Object|}, {hasError: boo
     }
 }
 
-ReactDOM.render(
-    <ErrorBoundary>
-        <Provider store={store}>
-            <Router>
-                <SomeProvider value={[()=>{},()=>{},()=>{}]}>
-                    <Route path='/' component={App}/>
-                </SomeProvider>
-            </Router>
-        </Provider>
-    </ErrorBoundary>, 
+// ReactDOM.render(
+//     <ErrorBoundary>
+//         <Provider store={store}>
+//             <Router>
+//                 <SomeProvider value={[()=>{},()=>{},()=>{}]}>
+//                     <Route path='/' component={App}/>
+//                 </SomeProvider>
+//             </Router>
+//         </Provider>
+//     </ErrorBoundary>, 
+// // $FlowIgnore
+//     document.querySelector('#root')
+// );
+
 // $FlowIgnore
-    document.querySelector('#root')
-);
+ReactDOM.render(<Walls3D />, document.querySelector('#root'));
