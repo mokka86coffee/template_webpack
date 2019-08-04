@@ -11,18 +11,18 @@ class Header extends React.Component {
         path: this.props.location.pathname
     }
 
-    componentDidUpdate() {
+    componentDidUpdate({location: { pathname }}) {
         const { pathname: newPath } = this.props.location;
-        const { params: { id } } = this.props.match;
+        const id = pathname.slice(1);
         const {currentChild, newChild: NewChild, path: currentPath} = this.state;
         
         if (currentPath !== newPath) {
+            
             if (!currentChild) {
-                console.log('Компонент отлетел')
                 const child = <Route path='/:id' render={() => React.cloneElement(<NewChild />, {match: {params: {id}}, animate: true })} />
                 this.setState(
                     {currentChild: child, newChild: this.props.children[0].component, path: newPath},
-                    () => setTimeout(() => (console.log('Компонент прилетел') || this.setState({currentChild: null, animate: false})), 1000)
+                    () => setTimeout(() => this.setState({currentChild: null, animate: false}), 1000)
                 );
             }
         }
