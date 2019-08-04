@@ -1,3 +1,5 @@
+$timeout: 1s;
+
 @import url('https://fonts.googleapis.com/css?family=Kaushan+Script|Playfair+Display:900&display=swap');
 .header {
     position: relative;
@@ -17,6 +19,15 @@
     line-height: 150px;
     font-size: 540px;
     color: rgba(255, 255, 255, 0.589);
+    transition: transform $timeout, opacity $timeout;
+
+    &--animate-start {
+        transform: perspective(400px) translateZ(-144px) rotate3D(2, 1, -1, 35deg);
+    }
+
+    &--animate-end {
+        opacity: 0;
+    }
 }
 
 .fontTitle {
@@ -24,10 +35,10 @@
     top: 50%;
     left: 20%;
     font-family: 'Kaushan Script', cursive;
-    font-size: 120px;
+    font-size: 80px;
     color: #eee;
     text-shadow: 1px 1px 4px #000000b0, 1px 1px 3px #000, 1px 1px 4px #000;
-    transition: transform 1s, opacity 1s;
+    transition: transform $timeout, opacity $timeout;
     transform: perspective(500px) translateZ(-110px) rotate3d(1, 6, 3, 45deg);
 
     &--animate-start {

@@ -91,4 +91,4 @@ class ErrorBoundary extends React.Component<{|children: Object|}, {hasError: boo
 // );
 
 // $FlowIgnore
-ReactDOM.render(<Walls3D />, document.querySelector('#root'));
+ReactDOM.render(<Router><Walls3D /></Router>, document.querySelector('#root'));
