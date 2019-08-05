@@ -4,7 +4,8 @@ $timeout: 1s;
 .header {
     position: relative;
     height: 100vh;
-    background: url(https://yellowhome.ru/wp-content/uploads/2016/10/21-36.jpg) 0 0 no-repeat/cover;
+    background: radial-gradient(rgba(0, 0, 0, 0.562), rgba(2, 2, 2, 0.507)),
+        url(https://yellowhome.ru/wp-content/uploads/2016/10/21-36.jpg) 0 0 no-repeat/cover;
 
     & * {
         background-color: transparent;
@@ -44,7 +45,7 @@ $timeout: 1s;
 
     &--animate-start {
         opacity: 0;
-        transform: perspective(400px) translateX(200px) scale(2) translateZ(-144px) rotate3D(2, 1, -1, 35deg);
+        transform: perspective(400px) translateX(200px) scale(.1) translateZ(-144px);
     }
 
     &--animate-end {
