@@ -69,7 +69,7 @@ const ParserRules = [
 module.exports = {
   entry: './src/_index.js',
   output: {
-    filename: 'main.js',
+    filename: 'main.[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     publicPath: 'dist/'
   },
