@@ -1,7 +1,8 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const exclude = /node_modules/;
 
 function createParser(params) {
@@ -43,9 +44,14 @@ const scssParser = createParser({
   ]
 });
 
+const pugParser = createParser({
+  test: /\.pug$/,
+  use: ['pug-loader']
+});
+
 const jsParser = createParser({
   test: /\.js$/,
-  use: {
+  use: [{
     loader: 'babel-loader',
     options: {
       presets: ['@babel/preset-env'],
@@ -56,14 +62,15 @@ const jsParser = createParser({
         '@babel/plugin-transform-spread'
       ]
     }
-  }
+  }]
 });
 
 const ParserRules = [
   cssParser,
   scssParser,
   imgParser,
-  jsParser
+  jsParser,
+  pugParser
 ];
 
 module.exports = {
@@ -71,7 +78,7 @@ module.exports = {
   output: {
     filename: 'main.[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: 'dist/'
+    publicPath: ''
   },
   mode: 'none',
   module: {
@@ -79,6 +86,15 @@ module.exports = {
   },
   plugins: [
     new TerserPlugin(),
-    new MiniCssExtractPlugin()
+    new MiniCssExtractPlugin({
+      filename: 'maun.[contenthash].css'
+    }),
+    new CleanWebpackPlugin({
+      // cleanAfterEveryBuildPatterns: ['static*.*', '!static1.js'], // default: [] // удаляет файлы в watch mode
+      cleanOnceBeforeBuildPatterns: ['**/*', '!some-folder*'] // default: [] // очистка конкретных директорий (!name.js паттерн для исключения)
+    }),
+    new HtmlWebpackPlugin({
+      template: './template.pug'
+    })
   ]
 }
