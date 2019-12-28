@@ -39,7 +39,23 @@ const scssParser = createParser({
         esModule: true,
       }
     },
-    'css-loader',
+    {
+      loader: 'css-loader',
+      options: {
+        importLoaders: 1
+      }
+    },
+    {
+      loader: 'postcss-loader',
+      options: {
+        plugins: function() {
+          return [
+            require('precss'),
+            require('autoprefixer')
+          ];
+        }
+      }
+    },
     'sass-loader'
   ]
 });
