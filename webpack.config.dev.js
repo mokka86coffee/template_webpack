@@ -76,18 +76,23 @@ const ParserRules = [
 module.exports = {
   entry: './src/_index.js',
   output: {
-    filename: 'main.[contenthash].js',
+    filename: '[name].[hash].js',
     path: path.resolve(__dirname, 'dist'),
     publicPath: ''
   },
-  mode: 'none',
+  mode: 'development',
+  devServer: {
+    contentBase: path.resolve(__dirname, 'dist'),
+    index: 'index.html',
+    port: 8000
+  },
   module: {
     rules: ParserRules
   },
   plugins: [
-    new TerserPlugin(),
+    // new TerserPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'maun.[contenthash].css'
+      filename: '[name].[contenthash].css'
     }),
     new CleanWebpackPlugin({
       // cleanAfterEveryBuildPatterns: ['static*.*', '!static1.js'], // default: [] // удаляет файлы в watch mode
@@ -97,4 +102,4 @@ module.exports = {
       template: './template.pug'
     })
   ]
-}
+};

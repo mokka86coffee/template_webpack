@@ -1,5 +1,4 @@
-export helloworld from './helloworld';
-export addImage from './addImage';
+import * as funcs from './index';
 
-// helloworld();
-// addImage();
+funcs.helloworld();
+funcs.addImage();
